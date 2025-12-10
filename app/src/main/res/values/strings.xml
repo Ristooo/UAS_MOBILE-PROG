@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">EventManagementApp</string>
+
+    <string-array name="status_options">
+        <item>upcoming</item>
+        <item>ongoing</item>
+        <item>completed</item>
+        <item>cancelled</item>
+    </string-array>
+
+    <string-array name="filter_options">
+        <item>Semua Event</item>
+        <item>upcoming</item>
+        <item>ongoing</item>
+        <item>completed</item>
+        <item>cancelled</item>
+    </string-array>
 </resources>

@@ -1,6 +1,9 @@
 package com.Ris_Gio.eventmanagement.networks
 
 
+import com.Ris_Gio.eventmanagement.models.ApiResponse
+import com.Ris_Gio.eventmanagement.models.Event
+import com.Ris_Gio.eventmanagement.models.Statistics
 import retrofit2.Response
 import retrofit2.http.*
 

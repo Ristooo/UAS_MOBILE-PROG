@@ -15,6 +15,6 @@ data class Statistics(
     @SerializedName("completed")
     val completed: String,
 
-    @SeralizedName("cancelled")
+    @SerializedName("cancelled")
     val cancelled: String
 )

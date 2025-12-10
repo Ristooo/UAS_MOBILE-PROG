@@ -1,5 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.EventManagementApp" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- TEMA UTAMA: Ganti Theme.Material3 menjadi Theme.AppCompat.Light.DarkActionBar untuk kompatibilitas.
+         Ini akan menyelesaikan FATAL EXCEPTION: IllegalStateException. -->
+    <style name="Theme.EventManagementApp" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Definisi warna utama yang harus ada di colors.xml -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Setting status bar color -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+
+        <!-- Karena kita menggunakan tema DarkActionBar, Action Bar akan muncul secara otomatis. -->
+    </style>
+
+    <!-- STYLE-STYLE UI SPESIFIK -->
+    <style name="StatCardStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">4dp</item>
+    </style>
+
+    <style name="StatContentStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">#E3F2FD</item>
+    </style>
+
+    <style name="StatCountStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#1565C0</item>
+    </style>
+
+    <style name="StatLabelStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#757575</item>
+        <item name="android:layout_marginTop">4dp</item>
+    </style>
+
 </resources>

@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.EventManagementApp">
+
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -25,6 +28,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".NewEventActivity"
+            android:exported="false"
+            android:label="Buat Event Baru" />
+
+        <activity
+            android:name=".EditEventActivity"
+            android:exported="false"
+            android:label="Edit Event" />
+
+        <activity
+            android:name=".StatsFilterActivity"
+            android:exported="false"
+            android:label="Statistik &amp; Filter" />
+
     </application>
 
 </manifest>

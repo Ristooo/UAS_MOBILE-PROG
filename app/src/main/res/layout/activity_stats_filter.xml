@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".StatsFilterActivity">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/tv_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progress_bar_stats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_status_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gagal Memuat Statistik"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- KARDU STATISTIK -->
+    <LinearLayout
+        android:id="@+id/ll_stats_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ringkasan Statistik"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:layout_marginBottom="8dp"/>
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:rowCount="3"
+            android:alignmentMode="alignBounds"
+            android:columnOrderPreserved="false">
+
+            <!-- Card Total -->
+            <androidx.cardview.widget.CardView
+                style="@style/StatCardStyle"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1">
+                <LinearLayout style="@style/StatContentStyle">
+                    <TextView android:id="@+id/tv_stat_total" style="@style/StatCountStyle" tools:text="20" />
+                    <TextView style="@style/StatLabelStyle" android:text="Total Event" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Card Upcoming -->
+            <androidx.cardview.widget.CardView
+                style="@style/StatCardStyle"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1">
+                <LinearLayout style="@style/StatContentStyle">
+                    <TextView android:id="@+id/tv_stat_upcoming" style="@style/StatCountStyle" tools:text="10" />
+                    <TextView style="@style/StatLabelStyle" android:text="Akan Datang" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Card Ongoing -->
+            <androidx.cardview.widget.CardView
+                style="@style/StatCardStyle"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1">
+                <LinearLayout style="@style/StatContentStyle">
+                    <TextView android:id="@+id/tv_stat_ongoing" style="@style/StatCountStyle" tools:text="2" />
+                    <TextView style="@style/StatLabelStyle" android:text="Berlangsung" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Card Completed -->
+            <androidx.cardview.widget.CardView
+                style="@style/StatCardStyle"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1">
+                <LinearLayout style="@style/StatContentStyle">
+                    <TextView android:id="@+id/tv_stat_completed" style="@style/StatCountStyle" tools:text="7" />
+                    <TextView style="@style/StatLabelStyle" android:text="Selesai" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </GridLayout>
+
+    </LinearLayout>
+
+    <!-- Tombol Filter Status -->
+    <TextView
+        android:id="@+id/tv_filter_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Filter Event Berdasarkan Status"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/ll_stats_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Spinner
+        android:id="@+id/spinner_main_filter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:entries="@array/filter_options"
+        app:layout_constraintTop_toBottomOf="@id/tv_filter_header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="12dp"/>
+
+    <Button
+        android:id="@+id/btn_apply_filter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Terapkan Filter &amp; Lihat Daftar"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/spinner_main_filter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
