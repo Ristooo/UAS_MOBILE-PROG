@@ -22,7 +22,11 @@ import android.view.Menu
 import android.view.MenuItem
 import com.Ris_Gio.eventmanagement.R
 import android.widget.EditText
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.Calendar
 import android.content.Context
+import android.app.DatePickerDialog // Diperlukan untuk Date Picker
 
 class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
 
@@ -30,6 +34,10 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
     private lateinit var progressBar: ProgressBar
     private lateinit var eventAdapter: EventAdapter
     private lateinit var fabAddEvent: FloatingActionButton
+
+    // VARIABEL UNTUK MENYIMPAN FUNGSI CALLBACK PENCARIAN TANGGAL
+    // Digunakan untuk menentukan fungsi mana yang harus dipanggil setelah DatePicker selesai
+    private var dateSearchCallback: ((String) -> Unit)? = null
 
     // Launcher untuk Activity Create
     private val createEventResultLauncher = registerForActivityResult(
@@ -99,12 +107,15 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
                 filterStatsResultLauncher.launch(intent)
                 true
             }
-            R.id.action_search_edit -> {
-                // Aksi: Cari Event berdasarkan ID dan muat Edit Activity
-                promptForEventIdForEdit()
+            R.id.action_search_view -> { // CARI UNTUK VIEW/FILTER
+                promptSearchAndShowDetail()
                 true
             }
-            R.id.action_delete_event -> { // BARU: Menangani aksi Hapus Event
+            R.id.action_search_edit_mode -> { // CARI UNTUK EDIT
+                promptSearchAndEdit()
+                true
+            }
+            R.id.action_delete_event -> {
                 promptForEventIdForDelete()
                 true
             }
@@ -118,27 +129,143 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
         }
     }
 
-    // --- Fungsi Prompt Input ID untuk Edit ---
-    private fun promptForEventIdForEdit() { // Nama fungsi diperjelas
-        val inputEditText = EditText(this)
-        inputEditText.hint = "Masukkan Event ID (Contoh: 123)"
+    // --- HELPER: DATE PICKER DIALOG (BARU) ---
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        DatePickerDialog(
+            this,
+            { _, selectedYear, selectedMonth, selectedDay ->
+                // Format tanggal menjadi YYYY-MM-DD
+                val formattedDate = String.format(
+                    "%d-%02d-%02d",
+                    selectedYear,
+                    selectedMonth + 1, // Bulan dimulai dari 0
+                    selectedDay
+                )
+                // Panggil callback setelah tanggal dipilih
+                dateSearchCallback?.invoke(formattedDate)
+            },
+            year,
+            month,
+            day
+        ).show()
+    }
+
+    // --- FUNGSI 1: CARI & TAMPILKAN DETAIL/FILTER (ID -> DETAIL, Tanggal -> FILTER) ---
+    private fun promptSearchAndShowDetail() {
+        val inputEditText = EditText(this).apply {
+            hint = "Masukkan ID Event"
+        }
 
         AlertDialog.Builder(this)
-            .setTitle("Cari Event untuk Edit (Berdasarkan ID)")
+            .setTitle("Cari Event untuk Dilihat")
             .setView(inputEditText)
-            .setPositiveButton("Cari") { dialog, _ ->
-                val eventId = inputEditText.text.toString().trim()
-                if (eventId.isNotEmpty()) {
-                    loadEventForEdit(eventId)
+            .setPositiveButton("Cari ID") { dialog, _ -> // Tombol untuk Cari ID
+                val searchTerm = inputEditText.text.toString().trim()
+                if (searchTerm.matches(Regex("^\\d+$"))) {
+                    loadSingleEventAndShowDetail(searchTerm)
                 } else {
-                    Toast.makeText(this, "ID Event tidak boleh kosong.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Masukkan ID (angka) yang valid.", Toast.LENGTH_LONG).show()
                 }
+            }
+            .setNeutralButton("Cari Tanggal") { _, _ -> // Tombol untuk Cari Tanggal
+                // Set callback untuk filter daftar event utama
+                dateSearchCallback = { selectedDate ->
+                    fetchEvents(dateFrom = selectedDate, dateTo = selectedDate)
+                    Toast.makeText(this, "Daftar Event difilter berdasarkan Tanggal: $selectedDate", Toast.LENGTH_LONG).show()
+                }
+                showDatePickerDialog() // Panggil pemilih tanggal
             }
             .setNegativeButton("Batal", null)
             .show()
     }
 
-    // --- Fungsi Prompt Input ID untuk Hapus (BARU) ---
+    // --- FUNGSI 2: CARI & MUAT EDIT (ID -> EDIT) ---
+    private fun promptSearchAndEdit() {
+        val inputEditText = EditText(this).apply {
+            hint = "Masukkan ID Event" // Hanya fokus pada ID untuk Edit
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Cari Event untuk Edit")
+            .setView(inputEditText)
+            .setPositiveButton("Cari ID") { dialog, _ ->
+                val searchTerm = inputEditText.text.toString().trim()
+                if (searchTerm.matches(Regex("^\\d+$"))) {
+                    launchEditActivityById(searchTerm)
+                } else {
+                    Toast.makeText(this, "Masukkan ID (angka) yang valid.", Toast.LENGTH_LONG).show()
+                }
+            }
+            .setNeutralButton("Filter Tanggal") { _, _ -> // Opsi untuk filter (jika dibutuhkan)
+                // Set callback untuk filter daftar event utama
+                dateSearchCallback = { selectedDate ->
+                    fetchEvents(dateFrom = selectedDate, dateTo = selectedDate)
+                    Toast.makeText(this, "Daftar Event difilter berdasarkan Tanggal: $selectedDate", Toast.LENGTH_LONG).show()
+                }
+                showDatePickerDialog() // Panggil pemilih tanggal
+            }
+            .setNegativeButton("Batal", null)
+            .show()
+    }
+
+    // Helper untuk memvalidasi format tanggal (dipertahankan untuk fungsi lain)
+    private fun isValidDateFormat(date: String): Boolean {
+        return try {
+            val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            format.isLenient = false
+            format.parse(date)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    // --- FUNGSI UNTUK MENGAMBIL EVENT TUNGGAL & MELUNCURKAN DETAIL ---
+    private fun loadSingleEventAndShowDetail(eventId: String) {
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // Menggunakan getEventById yang ada di EventApiService
+                val response = RetrofitClient.instance.getEventById(eventId)
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+
+                    if (response.isSuccessful && response.body()?.data != null) {
+                        val event = response.body()!!.data!!
+                        // Langsung luncurkan Activity Detail
+                        val intent = Intent(this@MainActivity, EventDetailActivity::class.java).apply {
+                            putExtra("EXTRA_EVENT_DETAIL", event)
+                        }
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(this@MainActivity, "Event ID $eventId tidak ditemukan.", Toast.LENGTH_LONG).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(this@MainActivity, "Koneksi Gagal saat mencari event.", Toast.LENGTH_LONG).show()
+                    Log.e("API_SEARCH", "Exception: ${e.message}", e)
+                }
+            }
+        }
+    }
+
+    // --- FUNGSI UNTUK MELUNCURKAN EDIT ACTIVITY BERDASARKAN ID ---
+    private fun launchEditActivityById(id: String) {
+        val intent = Intent(this, EditEventActivity::class.java).apply {
+            putExtra("EXTRA_EVENT_ID", id)
+        }
+        editEventResultLauncher.launch(intent)
+        Toast.makeText(this, "Memuat Event ID $id untuk Edit...", Toast.LENGTH_SHORT).show()
+    }
+
+    // --- Fungsi Prompt Input ID untuk Hapus ---
     private fun promptForEventIdForDelete() {
         val inputEditText = EditText(this)
         inputEditText.hint = "Masukkan Event ID untuk dihapus"
@@ -149,7 +276,6 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
             .setPositiveButton("Hapus") { _, _ ->
                 val eventId = inputEditText.text.toString().trim()
                 if (eventId.isNotEmpty()) {
-                    // Panggil onDeleteClicked (yang akan memanggil executeDelete setelah konfirmasi)
                     onDeleteClicked(eventId)
                 } else {
                     Toast.makeText(this, "ID Event tidak boleh kosong.", Toast.LENGTH_SHORT).show()
@@ -159,33 +285,29 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
             .show()
     }
 
-    // --- Fungsi Navigasi ke Edit Event (Muat Event Berdasarkan ID) ---
-    private fun loadEventForEdit(eventId: String) {
-        val intent = Intent(this, EditEventActivity::class.java).apply {
-            putExtra("EXTRA_EVENT_ID", eventId)
-        }
-        editEventResultLauncher.launch(intent)
-    }
 
     // --- Implementasi Item Click (Detail View) ---
     override fun onItemClicked(event: Event) {
         val intent = Intent(this, EventDetailActivity::class.java).apply {
-            // Mengirim seluruh objek Event ke Activity Detail
             putExtra("EXTRA_EVENT_DETAIL", event)
         }
         startActivity(intent)
     }
 
-    // --- Logika Jaringan: GET All Events ---
-    private fun fetchEvents(statusFilter: String? = null) {
+    // --- Logika Jaringan: GET All Events (MODIFIKASI: Tambah Date Filter) ---
+    private fun fetchEvents(statusFilter: String? = null, dateFrom: String? = null, dateTo: String? = null) {
         progressBar.visibility = View.VISIBLE
 
         val statusParam = if (statusFilter.isNullOrEmpty() || statusFilter == "Semua Event") null else statusFilter
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // Mengirim hanya status filter ke API
-                val response = RetrofitClient.instance.getAllEvents(status = statusParam)
+                // Mengirim status, date_from, dan date_to ke API
+                val response = RetrofitClient.instance.getAllEvents(
+                    status = statusParam,
+                    dateFrom = dateFrom,
+                    dateTo = dateTo
+                )
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
 
@@ -195,7 +317,7 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
                             eventAdapter.updateData(events)
                         } else {
                             Toast.makeText(this@MainActivity, "Data event kosong atau tidak ditemukan.", Toast.LENGTH_LONG).show()
-                            eventAdapter.updateData(emptyList()) // Kosongkan daftar
+                            eventAdapter.updateData(emptyList())
                         }
                     } else {
                         Toast.makeText(this@MainActivity, "Gagal memuat data: ${response.code()}", Toast.LENGTH_LONG).show()
