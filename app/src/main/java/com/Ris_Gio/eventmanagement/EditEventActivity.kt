@@ -1,5 +1,8 @@
 package com.Ris_Gio.eventmanagement
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -16,6 +19,7 @@ import com.Ris_Gio.eventmanagement.networks.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.* // Import untuk Calendar
 
 class EditEventActivity : AppCompatActivity() {
 
@@ -52,14 +56,49 @@ class EditEventActivity : AppCompatActivity() {
         // 2. Inisialisasi View
         initViews()
 
-        // 3. Muat Data Lama (GET by ID)
+        // 3. Setup Listener untuk Date dan Time Picker (BARU)
+        etDate.setOnClickListener {
+            showDatePicker()
+        }
+        etTime.setOnClickListener {
+            showTimePicker()
+        }
+
+        // 4. Muat Data Lama (GET by ID)
         fetchEventDetails(eventId!!)
 
-        // 4. Set listener untuk tombol "Simpan Perubahan"
+        // 5. Set listener untuk tombol "Simpan Perubahan"
         btnSaveChanges.setOnClickListener {
             executeUpdateEvent(eventId!!)
         }
     }
+
+    // --- FUNGSI DATE AND TIME PICKER (BARU) ---
+    private fun showDatePicker() {
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+
+        DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+            // Format Tanggal ke YYYY-MM-DD
+            val formattedDate = String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
+            etDate.setText(formattedDate)
+        }, year, month, day).show()
+    }
+
+    private fun showTimePicker() {
+        val c = Calendar.getInstance()
+        val hour = c.get(Calendar.HOUR_OF_DAY)
+        val minute = c.get(Calendar.MINUTE)
+
+        TimePickerDialog(this, { _, selectedHour, selectedMinute ->
+            // Format Waktu ke HH:MM:SS
+            val formattedTime = String.format("%02d:%02d:00", selectedHour, selectedMinute)
+            etTime.setText(formattedTime)
+        }, hour, minute, true).show() // 'true' untuk format 24 jam
+    }
+
 
     // Inisialisasi semua View components
     private fun initViews() {
@@ -76,7 +115,7 @@ class EditEventActivity : AppCompatActivity() {
         // Setup Spinner Adapter
         ArrayAdapter.createFromResource(
             this,
-            R.array.status_options,
+            com.Ris_Gio.eventmanagement.R.array.status_options,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -114,14 +153,16 @@ class EditEventActivity : AppCompatActivity() {
 
     // Helper untuk mengisi form dengan data lama yang didapat dari API
     private fun fillFormWithData(event: Event) {
-        val statusOptions = resources.getStringArray(R.array.status_options)
+        val statusOptions = resources.getStringArray(com.Ris_Gio.eventmanagement.R.array.status_options)
         val statusIndex = statusOptions.indexOf(event.status)
+
+        supportActionBar?.title = "Edit Event ID: ${event.id ?: "N/A"}"
 
         etTitle.setText(event.title)
         etLocation.setText(event.location)
         etDate.setText(event.date)
         etTime.setText(event.time)
-        // Jika kapasitas null, setText akan diisi string kosong
+        // Kapasitas wajib, jadi jika null, biarkan kosong agar validasi terpicu
         etCapacity.setText(event.capacity?.toString() ?: "")
         etDescription.setText(event.description ?: "")
         if (statusIndex >= 0) {
@@ -140,11 +181,20 @@ class EditEventActivity : AppCompatActivity() {
         val description = etDescription.text.toString().trim()
         val status = spinnerStatus.selectedItem.toString()
 
-        // 2. Validasi (Sama seperti NewEventActivity)
-        if (title.isEmpty() || location.isEmpty() || date.isEmpty() || time.isEmpty()) {
+        // 2. Validasi Wajib Isi (Termasuk Kapasitas)
+        if (title.isEmpty() || location.isEmpty() || date.isEmpty() || time.isEmpty() || capacityStr.isEmpty()) {
             Toast.makeText(this, "Semua field bertanda * wajib diisi.", Toast.LENGTH_LONG).show()
             return
         }
+
+        // 3. Konversi kapasitas dan pastikan nilainya valid
+        val capacityInt = capacityStr.toIntOrNull()
+        if (capacityInt == null || capacityInt <= 0) {
+            Toast.makeText(this, "Kapasitas harus berupa angka valid (lebih dari 0).", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        // Catatan: Validasi format tanggal/waktu dihapus karena DatePicker/TimePicker menjamin format YYYY-MM-DD dan HH:MM:SS
 
         val updatedEventData = Event(
             id = id, // ID wajib disertakan di data class
@@ -152,7 +202,7 @@ class EditEventActivity : AppCompatActivity() {
             date = date,
             time = time,
             location = location,
-            capacity = capacityStr.toIntOrNull(),
+            capacity = capacityInt,
             description = description.ifEmpty { null },
             status = status
         )
