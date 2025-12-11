@@ -32,18 +32,29 @@
         <activity
             android:name=".NewEventActivity"
             android:exported="false"
-            android:label="Buat Event Baru" />
+            android:label="Buat Event Baru"
+            android:parentActivityName=".MainActivity" /> <!-- DIPERIKSA: Harus ada parentActivityName -->
 
         <activity
             android:name=".EditEventActivity"
             android:exported="false"
-            android:label="Edit Event" />
+            android:label="Edit Event"
+            android:parentActivityName=".MainActivity" /> <!-- DIPERIKSA: Harus ada parentActivityName -->
 
         <activity
             android:name=".StatsFilterActivity"
             android:exported="false"
-            android:label="Statistik &amp; Filter" />
+            android:label="Statistik &amp; Filter"
+            android:parentActivityName=".MainActivity" /> <!-- DIPERIKSA: Harus ada parentActivityName -->
+
+        <activity
+            android:name=".EventDetailActivity"
+            android:exported="false"
+            android:label="Detail Event"
+            android:parentActivityName=".MainActivity" /> <!-- DIPERIKSA: Harus ada parentActivityName -->
 
     </application>
+
+
 
 </manifest>

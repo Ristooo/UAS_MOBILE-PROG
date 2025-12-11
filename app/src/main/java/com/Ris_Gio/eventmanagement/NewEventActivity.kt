@@ -14,6 +14,7 @@ import com.Ris_Gio.eventmanagement.networks.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.Ris_Gio.eventmanagement.R
 
 class NewEventActivity : AppCompatActivity() {
     private lateinit var etTitle: EditText
@@ -26,8 +27,13 @@ class NewEventActivity : AppCompatActivity() {
     private lateinit var btnCreateEvent: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // PERBAIKAN TEMA: Panggil setTheme sebelum super.onCreate
+        setTheme(R.style.Theme_EventManagementApp)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_event)
+
+        // AKTIFKAN TOMBOL UP/KEMBALI KE PARENT ACTIVITY (BARU)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Inisialisasi View
         etTitle = findViewById(R.id.et_title)
@@ -61,7 +67,6 @@ class NewEventActivity : AppCompatActivity() {
 
     // Fungsi validasi format Waktu (HH:MM:SS atau HH:MM)
     private fun isValidTimeFormat(time: String): Boolean {
-        // API mendukung HH:MM:SS atau HH:MM
         return time.matches(Regex("^\\d{2}:\\d{2}:\\d{2}$")) || time.matches(Regex("^\\d{2}:\\d{2}$"))
     }
 
@@ -113,7 +118,6 @@ class NewEventActivity : AppCompatActivity() {
                         setResult(RESULT_OK) // Memberi sinyal ke MainActivity untuk refresh
                         finish()
                     } else {
-                        // Jika API mengembalikan 400 (Bad Request)
                         val message = response.body()?.message ?: "Gagal: Kesalahan data atau server (400/500)."
                         Toast.makeText(this@NewEventActivity,
                             "Gagal: $message", Toast.LENGTH_LONG).show()

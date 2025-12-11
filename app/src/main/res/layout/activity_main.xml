@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- RecyclerView untuk Menampilkan Daftar Event -->
+
 
     <!-- Progress Bar (Indikator Loading) -->
     <androidx.recyclerview.widget.RecyclerView
@@ -57,5 +57,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:contentDescription="Tambah Event Baru"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
