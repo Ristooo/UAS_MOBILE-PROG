@@ -1,129 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".EditEventActivity"
-    android:padding="16dp">
-
-    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".EditEventActivity"
+        android:background="#F5F7FA"> <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="20dp">
 
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Detail Event"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="#116A6F"
+            android:layout_marginBottom="24dp"/>
 
-        <!-- Progress Bar (Untuk Loading Detail Event) -->
-        <ProgressBar
+    <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
             android:visibility="gone"/>
 
-        <!-- 1. Judul Event -->
-        <com.google.android.material.textfield.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="Nama Event *">
+            android:hint="Nama Event *"
+            app:hintTextColor="#A865C8"> <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapWords" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- 2. Lokasi -->
-        <com.google.android.material.textfield.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="Lokasi Event *">
+            android:hint="Lokasi Event *"
+            app:hintTextColor="#A865C8">
 
-            <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords" />
-        </com.google.android.material.textfield.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- 3. Tanggal dan Waktu -->
-        <LinearLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="16dp">
 
-            <com.google.android.material.textfield.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Tanggal (YYYY-MM-DD) *">
+                android:hint="Tanggal (YYYY-MM-DD) *"
+                app:hintTextColor="#A865C8">
 
-                <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="date" />
-            </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:hint="Waktu (HH:MM:SS) *">
+                android:hint="Waktu (HH:MM:SS) *"
+                app:hintTextColor="#A865C8">
 
-                <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="time" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
 
-        <!-- 4. Kapasitas -->
-        <com.google.android.material.textfield.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="Kapasitas (Opsional)">
+            android:hint="Kapasitas (Opsional)"
+            app:hintTextColor="#A865C8">
 
-            <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_capacity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number" />
-        </com.google.android.material.textfield.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- 5. Deskripsi -->
-        <com.google.android.material.textfield.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Deskripsi (Opsional)">
+            android:layout_marginBottom="24dp"
+            android:hint="Deskripsi (Opsional)"
+            app:hintTextColor="#A865C8">
 
-            <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minLines="3"
+                android:minLines="4"
                 android:gravity="top"
                 android:inputType="textMultiLine" />
-        </com.google.android.material.textfield.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- 6. Status -->
-        <TextView
+    <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Status Event *"
+            android:text="Status Event"
             android:layout_marginBottom="8dp"
+            android:textColor="#116A6F"
+            android:textSize="16sp"
             android:textStyle="bold"/>
 
-        <Spinner
+    <Spinner
             android:id="@+id/spinner_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -131,14 +138,15 @@
             android:entries="@array/status_options"
             android:padding="10dp"/>
 
-        <!-- Tombol Aksi -->
-        <Button
+    <Button
             android:id="@+id/btn_save_changes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Simpan Perubahan Event"
+            android:text="SIMPAN PERUBAHAN EVENT"
             android:textSize="16sp"
-            android:padding="12dp"/>
-
-    </LinearLayout>
+            android:backgroundTint="#116A6F" android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            app:cornerRadius="4dp"/> </LinearLayout>
 </ScrollView>

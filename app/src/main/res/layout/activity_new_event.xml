@@ -244,7 +244,6 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#116A6F"
-                android:background="@drawable/button_gradient"
                 android:elevation="4dp"
                 android:layout_marginBottom="20dp"/>
 
