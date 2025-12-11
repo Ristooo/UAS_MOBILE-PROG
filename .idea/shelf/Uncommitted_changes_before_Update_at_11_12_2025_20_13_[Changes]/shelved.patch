@@ -1,0 +1,558 @@
+Index: app/src/main/res/layout/activity_new_event.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<ScrollView\r\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".NewEventActivity\"\r\n    android:padding=\"20dp\">\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"vertical\">\r\n\r\n\r\n\r\n        <!-- 1. Judul Event -->\r\n        <com.google.android.material.textfield.TextInputLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginBottom=\"20dp\"\r\n            android:hint=\"Nama Event *\">\r\n\r\n            <com.google.android.material.textfield.TextInputEditText\r\n                android:id=\"@+id/et_title\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:inputType=\"textCapWords\" />\r\n        </com.google.android.material.textfield.TextInputLayout>\r\n\r\n        <!-- 2. Lokasi -->\r\n        <com.google.android.material.textfield.TextInputLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginBottom=\"16dp\"\r\n            android:hint=\"Lokasi Event *\">\r\n\r\n            <com.google.android.material.textfield.TextInputEditText\r\n                android:id=\"@+id/et_location\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:inputType=\"textCapWords\" />\r\n        </com.google.android.material.textfield.TextInputLayout>\r\n\r\n        <!-- 3. Tanggal dan Waktu -->\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:orientation=\"horizontal\"\r\n            android:layout_marginBottom=\"16dp\">\r\n\r\n            <com.google.android.material.textfield.TextInputLayout\r\n                style=\"@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox\"\r\n                android:layout_width=\"0dp\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_weight=\"1\"\r\n                android:hint=\"Tanggal *\">\r\n\r\n                <com.google.android.material.textfield.TextInputEditText\r\n                    android:id=\"@+id/et_date\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:inputType=\"none\"\r\n                    android:focusable=\"false\"\r\n                    android:clickable=\"true\" /> <!-- KRITIS: Tidak bisa diketik, hanya diklik -->\r\n            </com.google.android.material.textfield.TextInputLayout>\r\n\r\n            <com.google.android.material.textfield.TextInputLayout\r\n                style=\"@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox\"\r\n                android:layout_width=\"0dp\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_weight=\"1\"\r\n                android:layout_marginStart=\"8dp\"\r\n                android:hint=\"Waktu *\">\r\n\r\n                <com.google.android.material.textfield.TextInputEditText\r\n                    android:id=\"@+id/et_time\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:inputType=\"none\"\r\n                    android:focusable=\"false\"\r\n                    android:clickable=\"true\" /> <!-- KRITIS: Tidak bisa diketik, hanya diklik -->\r\n            </com.google.android.material.textfield.TextInputLayout>\r\n        </LinearLayout>\r\n\r\n        <!-- 4. Kapasitas (DIJADIKAN WAJIB) -->\r\n        <com.google.android.material.textfield.TextInputLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginBottom=\"16dp\"\r\n            android:hint=\"Kapasitas *\"> <!-- DIUBAH DARI (Opsional) MENJADI * -->\r\n\r\n            <com.google.android.material.textfield.TextInputEditText\r\n                android:id=\"@+id/et_capacity\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:inputType=\"number\" />\r\n        </com.google.android.material.textfield.TextInputLayout>\r\n\r\n        <!-- 5. Deskripsi -->\r\n        <com.google.android.material.textfield.TextInputLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginBottom=\"16dp\"\r\n            android:hint=\"Deskripsi (Opsional)\">\r\n\r\n            <com.google.android.material.textfield.TextInputEditText\r\n                android:id=\"@+id/et_description\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:minLines=\"3\"\r\n                android:gravity=\"top\"\r\n                android:inputType=\"textMultiLine\" />\r\n        </com.google.android.material.textfield.TextInputLayout>\r\n\r\n        <!-- 6. Status -->\r\n        <TextView\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:text=\"Status Event *\"\r\n            android:layout_marginBottom=\"8dp\"\r\n            android:textStyle=\"bold\"/>\r\n\r\n        <Spinner\r\n            android:id=\"@+id/spinner_status\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginBottom=\"32dp\"\r\n            android:entries=\"@array/status_options\"\r\n            android:background=\"@drawable/spinner_border\"\r\n            android:padding=\"10dp\"/>\r\n\r\n        <!-- Tombol Aksi -->\r\n        <Button\r\n            android:id=\"@+id/btn_create_event\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:text=\"Buat Event Sekarang\"\r\n            android:textSize=\"16sp\"\r\n            android:padding=\"12dp\"/>\r\n\r\n    </LinearLayout>\r\n</ScrollView>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_new_event.xml b/app/src/main/res/layout/activity_new_event.xml
+--- a/app/src/main/res/layout/activity_new_event.xml	(revision 753cc4f47f57de9b72f5eb943f66c94937638f1d)
++++ b/app/src/main/res/layout/activity_new_event.xml	(date 1765458185869)
+@@ -6,7 +6,7 @@
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     tools:context=".NewEventActivity"
+-    android:padding="20dp">
++    android:padding="16dp">
+ 
+     <LinearLayout
+         android:layout_width="match_parent"
+@@ -14,12 +14,11 @@
+         android:orientation="vertical">
+ 
+ 
+-
+         <!-- 1. Judul Event -->
+         <com.google.android.material.textfield.TextInputLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+-            android:layout_marginBottom="20dp"
++            android:layout_marginBottom="16dp"
+             android:hint="Nama Event *">
+ 
+             <com.google.android.material.textfield.TextInputEditText
+@@ -51,45 +50,39 @@
+             android:layout_marginBottom="16dp">
+ 
+             <com.google.android.material.textfield.TextInputLayout
+-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="1"
+-                android:hint="Tanggal *">
++                android:hint="Tanggal (YYYY-MM-DD) *">
+ 
+                 <com.google.android.material.textfield.TextInputEditText
+                     android:id="@+id/et_date"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+-                    android:inputType="none"
+-                    android:focusable="false"
+-                    android:clickable="true" /> <!-- KRITIS: Tidak bisa diketik, hanya diklik -->
++                    android:inputType="textNoSuggestions" />
+             </com.google.android.material.textfield.TextInputLayout>
+ 
+             <com.google.android.material.textfield.TextInputLayout
+-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="1"
+                 android:layout_marginStart="8dp"
+-                android:hint="Waktu *">
++                android:hint="Waktu (HH:MM:SS) *">
+ 
+                 <com.google.android.material.textfield.TextInputEditText
+                     android:id="@+id/et_time"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+-                    android:inputType="none"
+-                    android:focusable="false"
+-                    android:clickable="true" /> <!-- KRITIS: Tidak bisa diketik, hanya diklik -->
++                    android:inputType="textNoSuggestions" />
+             </com.google.android.material.textfield.TextInputLayout>
+         </LinearLayout>
+ 
+-        <!-- 4. Kapasitas (DIJADIKAN WAJIB) -->
++        <!-- 4. Kapasitas -->
+         <com.google.android.material.textfield.TextInputLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginBottom="16dp"
+-            android:hint="Kapasitas *"> <!-- DIUBAH DARI (Opsional) MENJADI * -->
++            android:hint="Kapasitas (Opsional)">
+ 
+             <com.google.android.material.textfield.TextInputEditText
+                 android:id="@+id/et_capacity"
+@@ -114,7 +107,7 @@
+                 android:inputType="textMultiLine" />
+         </com.google.android.material.textfield.TextInputLayout>
+ 
+-        <!-- 6. Status -->
++        <!-- 6. Status (Kita buat default ke 'upcoming' saat membuat baru, tapi tetap fleksibel) -->
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+Index: app/src/main/java/com/Ris_Gio/eventmanagement/NewEventActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.Ris_Gio.eventmanagement\r\n\r\nimport android.app.DatePickerDialog\r\nimport android.app.TimePickerDialog\r\nimport android.os.Bundle\r\nimport android.util.Log\r\nimport android.view.View\r\nimport android.widget.ArrayAdapter\r\nimport android.widget.Button\r\nimport android.widget.EditText\r\nimport android.widget.Spinner\r\nimport android.widget.Toast\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport androidx.lifecycle.lifecycleScope\r\nimport com.Ris_Gio.eventmanagement.models.Event\r\nimport com.Ris_Gio.eventmanagement.networks.RetrofitClient\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.launch\r\nimport kotlinx.coroutines.withContext\r\nimport com.Ris_Gio.eventmanagement.R\r\nimport java.util.* // Import untuk Calendar\r\n\r\nclass NewEventActivity : AppCompatActivity() {\r\n    private lateinit var etTitle: EditText\r\n    private lateinit var etLocation: EditText\r\n    private lateinit var etDate: EditText\r\n    private lateinit var etTime: EditText\r\n    private lateinit var etCapacity: EditText\r\n    private lateinit var etDescription: EditText\r\n    private lateinit var spinnerStatus: Spinner\r\n    private lateinit var btnCreateEvent: Button\r\n\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        // PERBAIKAN TEMA: Panggil setTheme sebelum super.onCreate\r\n        setTheme(R.style.Theme_EventManagementApp)\r\n        super.onCreate(savedInstanceState)\r\n        setContentView(R.layout.activity_new_event)\r\n\r\n        // AKTIFKAN TOMBOL UP/KEMBALI KE PARENT ACTIVITY\r\n        supportActionBar?.setDisplayHomeAsUpEnabled(true)\r\n\r\n        // Inisialisasi View\r\n        etTitle = findViewById(R.id.et_title)\r\n        etLocation = findViewById(R.id.et_location)\r\n        etDate = findViewById(R.id.et_date)\r\n        etTime = findViewById(R.id.et_time)\r\n        etCapacity = findViewById(R.id.et_capacity)\r\n        etDescription = findViewById(R.id.et_description)\r\n        spinnerStatus = findViewById(R.id.spinner_status)\r\n        btnCreateEvent = findViewById(R.id.btn_create_event)\r\n\r\n        // Setup Spinner\r\n        ArrayAdapter.createFromResource(\r\n            this,\r\n            R.array.status_options,\r\n            android.R.layout.simple_spinner_item\r\n        ).also { adapter ->\r\n            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)\r\n            spinnerStatus.adapter = adapter\r\n        }\r\n\r\n        btnCreateEvent.setOnClickListener {\r\n            createNewEvent()\r\n        }\r\n\r\n        // BARU: Set listener untuk Date dan Time Picker\r\n        etDate.setOnClickListener {\r\n            showDatePicker()\r\n        }\r\n        etTime.setOnClickListener {\r\n            showTimePicker()\r\n        }\r\n    }\r\n\r\n    // --- FUNGSI DATE AND TIME PICKER (BARU) ---\r\n\r\n    private fun showDatePicker() {\r\n        val c = Calendar.getInstance()\r\n        val year = c.get(Calendar.YEAR)\r\n        val month = c.get(Calendar.MONTH)\r\n        val day = c.get(Calendar.DAY_OF_MONTH)\r\n\r\n        val dpd = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->\r\n            // Format Tanggal ke YYYY-MM-DD\r\n            val formattedDate = String.format(\"%d-%02d-%02d\", selectedYear, selectedMonth + 1, selectedDay)\r\n            etDate.setText(formattedDate)\r\n        }, year, month, day)\r\n        dpd.show()\r\n    }\r\n\r\n    private fun showTimePicker() {\r\n        val c = Calendar.getInstance()\r\n        val hour = c.get(Calendar.HOUR_OF_DAY)\r\n        val minute = c.get(Calendar.MINUTE)\r\n\r\n        val tpd = TimePickerDialog(this, { _, selectedHour, selectedMinute ->\r\n            // Format Waktu ke HH:MM:SS\r\n            val formattedTime = String.format(\"%02d:%02d:00\", selectedHour, selectedMinute)\r\n            etTime.setText(formattedTime)\r\n        }, hour, minute, true) // 'true' untuk format 24 jam\r\n        tpd.show()\r\n    }\r\n\r\n    // Fungsi validasi format Tanggal (DIHAPUS karena picker menjamin format)\r\n    // private fun isValidDateFormat(date: String): Boolean { ... }\r\n\r\n    // Fungsi validasi format Waktu (DIHAPUS karena picker menjamin format)\r\n    // private fun isValidTimeFormat(time: String): Boolean { ... }\r\n\r\n    private fun createNewEvent() {\r\n        val title = etTitle.text.toString().trim()\r\n        val location = etLocation.text.toString().trim()\r\n        val date = etDate.text.toString().trim()\r\n        val time = etTime.text.toString().trim()\r\n        val capacityStr = etCapacity.text.toString().trim() // Ambil nilai kapasitas\r\n        val description = etDescription.text.toString().trim()\r\n        val status = spinnerStatus.selectedItem.toString()\r\n\r\n        // 1. Validasi Wajib Isi (Menambahkan capacityStr.isEmpty() untuk Kapasitas)\r\n        if (title.isEmpty() || location.isEmpty() || date.isEmpty() || time.isEmpty() || capacityStr.isEmpty()) {\r\n            Toast.makeText(this, \"Semua field bertanda * wajib diisi.\", Toast.LENGTH_LONG).show()\r\n            return\r\n        }\r\n\r\n        // Validasi format tanggal dan waktu DIBUANG karena sudah dijamin oleh picker.\r\n\r\n        // 2. Konversi kapasitas dan pastikan nilainya valid\r\n        val capacityInt = capacityStr.toIntOrNull()\r\n        if (capacityInt == null || capacityInt <= 0) {\r\n            Toast.makeText(this, \"Kapasitas harus berupa angka valid (lebih dari 0).\", Toast.LENGTH_LONG).show()\r\n            return\r\n        }\r\n\r\n\r\n        val newEventData = Event(\r\n            title = title,\r\n            date = date,\r\n            time = time,\r\n            location = location,\r\n            capacity = capacityInt, // Gunakan integer yang sudah divalidasi\r\n            description = description.ifEmpty { null },\r\n            status = status\r\n        )\r\n\r\n        // Panggilan API (POST)\r\n        lifecycleScope.launch(Dispatchers.IO) {\r\n            try {\r\n                val response = RetrofitClient.instance.createEvent(newEventData)\r\n\r\n                withContext(Dispatchers.Main) {\r\n                    if (response.isSuccessful && response.body()?.status == 201) {\r\n                        Toast.makeText(this@NewEventActivity,\r\n                            \"✅ Event ${response.body()?.data?.title} Berhasil Dibuat!\", Toast.LENGTH_LONG).show()\r\n                        setResult(RESULT_OK) // Memberi sinyal ke MainActivity untuk refresh\r\n                        finish()\r\n                    } else {\r\n                        val message = response.body()?.message ?: \"Gagal: Kesalahan data atau server (400/500).\"\r\n                        Toast.makeText(this@NewEventActivity,\r\n                            \"Gagal: $message\", Toast.LENGTH_LONG).show()\r\n                        Log.e(\"API_CREATE\", \"Error: ${response.code()}, Message: $message\")\r\n                    }\r\n                }\r\n            } catch (e: Exception) {\r\n                withContext(Dispatchers.Main) {\r\n                    Toast.makeText(this@NewEventActivity, \"Koneksi Gagal: ${e.message}\", Toast.LENGTH_LONG).show()\r\n                }\r\n            }\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/Ris_Gio/eventmanagement/NewEventActivity.kt b/app/src/main/java/com/Ris_Gio/eventmanagement/NewEventActivity.kt
+--- a/app/src/main/java/com/Ris_Gio/eventmanagement/NewEventActivity.kt	(revision 753cc4f47f57de9b72f5eb943f66c94937638f1d)
++++ b/app/src/main/java/com/Ris_Gio/eventmanagement/NewEventActivity.kt	(date 1765458303002)
+@@ -1,10 +1,7 @@
+ package com.Ris_Gio.eventmanagement
+ 
+-import android.app.DatePickerDialog
+-import android.app.TimePickerDialog
+ import android.os.Bundle
+ import android.util.Log
+-import android.view.View
+ import android.widget.ArrayAdapter
+ import android.widget.Button
+ import android.widget.EditText
+@@ -17,8 +14,6 @@
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.launch
+ import kotlinx.coroutines.withContext
+-import com.Ris_Gio.eventmanagement.R
+-import java.util.* // Import untuk Calendar
+ 
+ class NewEventActivity : AppCompatActivity() {
+     private lateinit var etTitle: EditText
+@@ -31,14 +26,9 @@
+     private lateinit var btnCreateEvent: Button
+ 
+     override fun onCreate(savedInstanceState: Bundle?) {
+-        // PERBAIKAN TEMA: Panggil setTheme sebelum super.onCreate
+-        setTheme(R.style.Theme_EventManagementApp)
+         super.onCreate(savedInstanceState)
+         setContentView(R.layout.activity_new_event)
+ 
+-        // AKTIFKAN TOMBOL UP/KEMBALI KE PARENT ACTIVITY
+-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+-
+         // Inisialisasi View
+         etTitle = findViewById(R.id.et_title)
+         etLocation = findViewById(R.id.et_location)
+@@ -62,82 +52,51 @@
+         btnCreateEvent.setOnClickListener {
+             createNewEvent()
+         }
+-
+-        // BARU: Set listener untuk Date dan Time Picker
+-        etDate.setOnClickListener {
+-            showDatePicker()
+-        }
+-        etTime.setOnClickListener {
+-            showTimePicker()
+-        }
+     }
+ 
+-    // --- FUNGSI DATE AND TIME PICKER (BARU) ---
+-
+-    private fun showDatePicker() {
+-        val c = Calendar.getInstance()
+-        val year = c.get(Calendar.YEAR)
+-        val month = c.get(Calendar.MONTH)
+-        val day = c.get(Calendar.DAY_OF_MONTH)
+-
+-        val dpd = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+-            // Format Tanggal ke YYYY-MM-DD
+-            val formattedDate = String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
+-            etDate.setText(formattedDate)
+-        }, year, month, day)
+-        dpd.show()
++    // Fungsi validasi format Tanggal (YYYY-MM-DD)
++    private fun isValidDateFormat(date: String): Boolean {
++        return date.matches(Regex("^\\d{4}-\\d{2}-\\d{2}$"))
+     }
+ 
+-    private fun showTimePicker() {
+-        val c = Calendar.getInstance()
+-        val hour = c.get(Calendar.HOUR_OF_DAY)
+-        val minute = c.get(Calendar.MINUTE)
+-
+-        val tpd = TimePickerDialog(this, { _, selectedHour, selectedMinute ->
+-            // Format Waktu ke HH:MM:SS
+-            val formattedTime = String.format("%02d:%02d:00", selectedHour, selectedMinute)
+-            etTime.setText(formattedTime)
+-        }, hour, minute, true) // 'true' untuk format 24 jam
+-        tpd.show()
++    // Fungsi validasi format Waktu (HH:MM:SS atau HH:MM)
++    private fun isValidTimeFormat(time: String): Boolean {
++        // API mendukung HH:MM:SS atau HH:MM
++        return time.matches(Regex("^\\d{2}:\\d{2}:\\d{2}$")) || time.matches(Regex("^\\d{2}:\\d{2}$"))
+     }
+-
+-    // Fungsi validasi format Tanggal (DIHAPUS karena picker menjamin format)
+-    // private fun isValidDateFormat(date: String): Boolean { ... }
+-
+-    // Fungsi validasi format Waktu (DIHAPUS karena picker menjamin format)
+-    // private fun isValidTimeFormat(time: String): Boolean { ... }
+ 
+     private fun createNewEvent() {
+         val title = etTitle.text.toString().trim()
+         val location = etLocation.text.toString().trim()
+         val date = etDate.text.toString().trim()
+         val time = etTime.text.toString().trim()
+-        val capacityStr = etCapacity.text.toString().trim() // Ambil nilai kapasitas
++        val capacityStr = etCapacity.text.toString().trim()
+         val description = etDescription.text.toString().trim()
+         val status = spinnerStatus.selectedItem.toString()
+ 
+-        // 1. Validasi Wajib Isi (Menambahkan capacityStr.isEmpty() untuk Kapasitas)
+-        if (title.isEmpty() || location.isEmpty() || date.isEmpty() || time.isEmpty() || capacityStr.isEmpty()) {
++        // 1. Validasi Wajib Isi
++        if (title.isEmpty() || location.isEmpty() || date.isEmpty() || time.isEmpty()) {
+             Toast.makeText(this, "Semua field bertanda * wajib diisi.", Toast.LENGTH_LONG).show()
+             return
+         }
+ 
+-        // Validasi format tanggal dan waktu DIBUANG karena sudah dijamin oleh picker.
+-
+-        // 2. Konversi kapasitas dan pastikan nilainya valid
+-        val capacityInt = capacityStr.toIntOrNull()
+-        if (capacityInt == null || capacityInt <= 0) {
+-            Toast.makeText(this, "Kapasitas harus berupa angka valid (lebih dari 0).", Toast.LENGTH_LONG).show()
++        // 2. Validasi Format API
++        if (!isValidDateFormat(date)) {
++            Toast.makeText(this, "Gagal: Format Tanggal harus YYYY-MM-DD (Contoh: 2025-12-23).", Toast.LENGTH_LONG).show()
+             return
+         }
+ 
++        if (!isValidTimeFormat(time)) {
++            Toast.makeText(this, "Gagal: Format Waktu harus HH:MM:SS atau HH:MM (Contoh: 19:03:02).", Toast.LENGTH_LONG).show()
++            return
++        }
+ 
+         val newEventData = Event(
+             title = title,
+             date = date,
+             time = time,
+             location = location,
+-            capacity = capacityInt, // Gunakan integer yang sudah divalidasi
++            capacity = capacityStr.toIntOrNull(),
+             description = description.ifEmpty { null },
+             status = status
+         )
+@@ -154,6 +113,7 @@
+                         setResult(RESULT_OK) // Memberi sinyal ke MainActivity untuk refresh
+                         finish()
+                     } else {
++                        // Jika API mengembalikan 400 (Bad Request)
+                         val message = response.body()?.message ?: "Gagal: Kesalahan data atau server (400/500)."
+                         Toast.makeText(this@NewEventActivity,
+                             "Gagal: $message", Toast.LENGTH_LONG).show()
+Index: app/src/main/java/com/Ris_Gio/eventmanagement/EditEventActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.Ris_Gio.eventmanagement\r\n\r\nimport android.app.DatePickerDialog\r\nimport android.app.TimePickerDialog\r\nimport android.os.Bundle\r\nimport android.util.Log\r\nimport android.view.View\r\nimport android.widget.ArrayAdapter\r\nimport android.widget.Button\r\nimport android.widget.EditText\r\nimport android.widget.ProgressBar\r\nimport android.widget.Spinner\r\nimport android.widget.Toast\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport androidx.lifecycle.lifecycleScope\r\nimport com.Ris_Gio.eventmanagement.models.Event\r\nimport com.Ris_Gio.eventmanagement.networks.RetrofitClient\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.launch\r\nimport kotlinx.coroutines.withContext\r\nimport java.util.* // Import untuk Calendar\r\n\r\nclass EditEventActivity : AppCompatActivity() {\r\n\r\n    // Deklarasi View (Sama seperti NewEventActivity)\r\n    private lateinit var etTitle: EditText\r\n    private lateinit var etLocation: EditText\r\n    private lateinit var etDate: EditText\r\n    private lateinit var etTime: EditText\r\n    private lateinit var etCapacity: EditText\r\n    private lateinit var etDescription: EditText\r\n    private lateinit var spinnerStatus: Spinner\r\n    private lateinit var btnSaveChanges: Button\r\n    private lateinit var progressBar: ProgressBar\r\n\r\n    private var eventId: String? = null // ID event yang akan di-edit\r\n\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        setTheme(R.style.Theme_EventManagementApp)\r\n        super.onCreate(savedInstanceState)\r\n        setContentView(R.layout.activity_edit_event)\r\n\r\n        // AKTIFKAN TOMBOL UP/KEMBALI KE PARENT ACTIVITY\r\n        supportActionBar?.setDisplayHomeAsUpEnabled(true)\r\n\r\n        // 1. Ambil ID dari Intent\r\n        eventId = intent.getStringExtra(\"EXTRA_EVENT_ID\")\r\n\r\n        if (eventId == null) {\r\n            Toast.makeText(this, \"Event ID tidak ditemukan.\", Toast.LENGTH_SHORT).show()\r\n            finish()\r\n            return\r\n        }\r\n\r\n        // 2. Inisialisasi View\r\n        initViews()\r\n\r\n        // 3. Muat Data Lama (GET by ID)\r\n        fetchEventDetails(eventId!!)\r\n\r\n        // 4. Set listener untuk tombol \"Simpan Perubahan\"\r\n        btnSaveChanges.setOnClickListener {\r\n            executeUpdateEvent(eventId!!)\r\n        }\r\n\r\n        // BARU: Set listener untuk Date dan Time Picker\r\n        etDate.setOnClickListener {\r\n            showDatePicker()\r\n        }\r\n        etTime.setOnClickListener {\r\n            showTimePicker()\r\n        }\r\n    }\r\n\r\n    // --- FUNGSI DATE AND TIME PICKER (BARU) ---\r\n\r\n    private fun showDatePicker() {\r\n        val c = Calendar.getInstance()\r\n        val year = c.get(Calendar.YEAR)\r\n        val month = c.get(Calendar.MONTH)\r\n        val day = c.get(Calendar.DAY_OF_MONTH)\r\n\r\n        val dpd = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->\r\n            // Format Tanggal ke YYYY-MM-DD\r\n            val formattedDate = String.format(\"%d-%02d-%02d\", selectedYear, selectedMonth + 1, selectedDay)\r\n            etDate.setText(formattedDate)\r\n        }, year, month, day)\r\n        dpd.show()\r\n    }\r\n\r\n    private fun showTimePicker() {\r\n        val c = Calendar.getInstance()\r\n        val hour = c.get(Calendar.HOUR_OF_DAY)\r\n        val minute = c.get(Calendar.MINUTE)\r\n\r\n        val tpd = TimePickerDialog(this, { _, selectedHour, selectedMinute ->\r\n            // Format Waktu ke HH:MM:SS\r\n            val formattedTime = String.format(\"%02d:%02d:00\", selectedHour, selectedMinute)\r\n            etTime.setText(formattedTime)\r\n        }, hour, minute, true) // 'true' untuk format 24 jam\r\n        tpd.show()\r\n    }\r\n\r\n    // Inisialisasi semua View components\r\n    private fun initViews() {\r\n        etTitle = findViewById(R.id.et_title)\r\n        etLocation = findViewById(R.id.et_location)\r\n        etDate = findViewById(R.id.et_date)\r\n        etTime = findViewById(R.id.et_time)\r\n        etCapacity = findViewById(R.id.et_capacity)\r\n        etDescription = findViewById(R.id.et_description)\r\n        spinnerStatus = findViewById(R.id.spinner_status)\r\n        btnSaveChanges = findViewById(R.id.btn_save_changes)\r\n        progressBar = findViewById(R.id.progress_bar)\r\n\r\n        // Setup Spinner Adapter\r\n        ArrayAdapter.createFromResource(\r\n            this,\r\n            com.Ris_Gio.eventmanagement.R.array.status_options,\r\n            android.R.layout.simple_spinner_item\r\n        ).also { adapter ->\r\n            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)\r\n            spinnerStatus.adapter = adapter\r\n        }\r\n    }\r\n\r\n    // --- Logika Jaringan: GET Single Event (READ) ---\r\n    private fun fetchEventDetails(id: String) {\r\n        progressBar.visibility = View.VISIBLE\r\n\r\n        lifecycleScope.launch(Dispatchers.IO) {\r\n            try {\r\n                // Panggil API untuk mendapatkan detail event berdasarkan ID\r\n                val response = RetrofitClient.instance.getEventById(id)\r\n                withContext(Dispatchers.Main) {\r\n                    progressBar.visibility = View.GONE\r\n\r\n                    if (response.isSuccessful && response.body()?.data != null) {\r\n                        fillFormWithData(response.body()!!.data!!)\r\n                    } else {\r\n                        Toast.makeText(this@EditEventActivity, \"Gagal memuat detail event.\", Toast.LENGTH_SHORT).show()\r\n                        finish()\r\n                    }\r\n                }\r\n            } catch (e: Exception) {\r\n                withContext(Dispatchers.Main) {\r\n                    progressBar.visibility = View.GONE\r\n                    Toast.makeText(this@EditEventActivity, \"Koneksi Gagal: ${e.message}\", Toast.LENGTH_SHORT).show()\r\n                    finish()\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    // Helper untuk mengisi form dengan data lama yang didapat dari API\r\n    private fun fillFormWithData(event: Event) {\r\n        val statusOptions = resources.getStringArray(com.Ris_Gio.eventmanagement.R.array.status_options)\r\n        val statusIndex = statusOptions.indexOf(event.status)\r\n\r\n        supportActionBar?.title = \"Edit Event ID: ${event.id ?: \"N/A\"}\"\r\n\r\n        etTitle.setText(event.title)\r\n        etLocation.setText(event.location)\r\n        etDate.setText(event.date)\r\n        etTime.setText(event.time)\r\n        // Kapasitas sekarang wajib, jadi jika null, biarkan kosong agar validasi terpicu\r\n        etCapacity.setText(event.capacity?.toString() ?: \"\")\r\n        etDescription.setText(event.description ?: \"\")\r\n        if (statusIndex >= 0) {\r\n            spinnerStatus.setSelection(statusIndex) // Pilih status yang sesuai\r\n        }\r\n    }\r\n\r\n    // --- FUNGSI VALIDASI FORMAT DIHAPUS karena DatePicker/TimePicker sudah menjamin format ---\r\n\r\n\r\n    // --- Logika Jaringan: PUT Update Event (UPDATE) ---\r\n    private fun executeUpdateEvent(id: String) {\r\n        // 1. Ambil input dari form\r\n        val title = etTitle.text.toString().trim()\r\n        val location = etLocation.text.toString().trim()\r\n        val date = etDate.text.toString().trim()\r\n        val time = etTime.text.toString().trim()\r\n        val capacityStr = etCapacity.text.toString().trim()\r\n        val description = etDescription.text.toString().trim()\r\n        val status = spinnerStatus.selectedItem.toString()\r\n\r\n        // 2. Validasi Wajib Isi (Semua field wajib diisi)\r\n        if (title.isEmpty() || location.isEmpty() || date.isEmpty() || time.isEmpty() || capacityStr.isEmpty()) {\r\n            Toast.makeText(this, \"Semua field bertanda * wajib diisi.\", Toast.LENGTH_LONG).show()\r\n            return\r\n        }\r\n\r\n        // 3. Konversi kapasitas dan pastikan nilainya valid\r\n        val capacityInt = capacityStr.toIntOrNull()\r\n        if (capacityInt == null || capacityInt <= 0) {\r\n            Toast.makeText(this, \"Kapasitas harus berupa angka valid (lebih dari 0).\", Toast.LENGTH_LONG).show()\r\n            return\r\n        }\r\n\r\n        // Validasi format tanggal dan waktu DIBUANG karena sudah dijamin oleh picker.\r\n        // Cukup pastikan EditText tidak kosong.\r\n\r\n        val updatedEventData = Event(\r\n            id = id, // ID wajib disertakan di data class\r\n            title = title,\r\n            date = date,\r\n            time = time,\r\n            location = location,\r\n            capacity = capacityInt, // Gunakan integer yang sudah divalidasi\r\n            description = description.ifEmpty { null },\r\n            status = status\r\n        )\r\n\r\n        // Coroutine untuk panggilan API\r\n        lifecycleScope.launch(Dispatchers.IO) {\r\n            try {\r\n                // Panggil endpoint PUT Update Event (ID di pass via @Query)\r\n                val response = RetrofitClient.instance.updateEvent(id, updatedEventData)\r\n\r\n                withContext(Dispatchers.Main) {\r\n                    if (response.isSuccessful && response.body()?.status == 200) {\r\n                        Toast.makeText(this@EditEventActivity,\r\n                            \"✅ Event Berhasil Diperbarui!\", Toast.LENGTH_LONG).show()\r\n\r\n                        setResult(RESULT_OK) // Set result OK agar MainActivity me-refresh\r\n                        finish()\r\n                    } else {\r\n                        val message = response.body()?.message ?: \"Gagal memperbarui event (400/500).\"\r\n                        Toast.makeText(this@EditEventActivity,\r\n                            \"Gagal: $message\", Toast.LENGTH_LONG).show()\r\n                        Log.e(\"API_UPDATE\", \"Error: ${response.code()}, Message: $message\")\r\n                    }\r\n                }\r\n            } catch (e: Exception) {\r\n                withContext(Dispatchers.Main) {\r\n                    Toast.makeText(this@EditEventActivity, \"Koneksi Gagal: ${e.message}\", Toast.LENGTH_LONG).show()\r\n                }\r\n            }\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/Ris_Gio/eventmanagement/EditEventActivity.kt b/app/src/main/java/com/Ris_Gio/eventmanagement/EditEventActivity.kt
+--- a/app/src/main/java/com/Ris_Gio/eventmanagement/EditEventActivity.kt	(revision 753cc4f47f57de9b72f5eb943f66c94937638f1d)
++++ b/app/src/main/java/com/Ris_Gio/eventmanagement/EditEventActivity.kt	(date 1765458291460)
+@@ -1,7 +1,5 @@
+ package com.Ris_Gio.eventmanagement
+ 
+-import android.app.DatePickerDialog
+-import android.app.TimePickerDialog
+ import android.os.Bundle
+ import android.util.Log
+ import android.view.View
+@@ -18,11 +16,8 @@
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.launch
+ import kotlinx.coroutines.withContext
+-import java.util.* // Import untuk Calendar
+ 
+ class EditEventActivity : AppCompatActivity() {
+-
+-    // Deklarasi View (Sama seperti NewEventActivity)
+     private lateinit var etTitle: EditText
+     private lateinit var etLocation: EditText
+     private lateinit var etDate: EditText
+@@ -33,17 +28,11 @@
+     private lateinit var btnSaveChanges: Button
+     private lateinit var progressBar: ProgressBar
+ 
+-    private var eventId: String? = null // ID event yang akan di-edit
++    private var eventId: String? = null
+ 
+     override fun onCreate(savedInstanceState: Bundle?) {
+-        setTheme(R.style.Theme_EventManagementApp)
+         super.onCreate(savedInstanceState)
+         setContentView(R.layout.activity_edit_event)
+-
+-        // AKTIFKAN TOMBOL UP/KEMBALI KE PARENT ACTIVITY
+-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+-
+-        // 1. Ambil ID dari Intent
+         eventId = intent.getStringExtra("EXTRA_EVENT_ID")
+ 
+         if (eventId == null) {
+@@ -51,57 +40,13 @@
+             finish()
+             return
+         }
+-
+-        // 2. Inisialisasi View
+         initViews()
+-
+-        // 3. Muat Data Lama (GET by ID)
+         fetchEventDetails(eventId!!)
+-
+-        // 4. Set listener untuk tombol "Simpan Perubahan"
+         btnSaveChanges.setOnClickListener {
+             executeUpdateEvent(eventId!!)
+         }
+-
+-        // BARU: Set listener untuk Date dan Time Picker
+-        etDate.setOnClickListener {
+-            showDatePicker()
+-        }
+-        etTime.setOnClickListener {
+-            showTimePicker()
+-        }
+-    }
+-
+-    // --- FUNGSI DATE AND TIME PICKER (BARU) ---
+-
+-    private fun showDatePicker() {
+-        val c = Calendar.getInstance()
+-        val year = c.get(Calendar.YEAR)
+-        val month = c.get(Calendar.MONTH)
+-        val day = c.get(Calendar.DAY_OF_MONTH)
+-
+-        val dpd = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+-            // Format Tanggal ke YYYY-MM-DD
+-            val formattedDate = String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
+-            etDate.setText(formattedDate)
+-        }, year, month, day)
+-        dpd.show()
+     }
+ 
+-    private fun showTimePicker() {
+-        val c = Calendar.getInstance()
+-        val hour = c.get(Calendar.HOUR_OF_DAY)
+-        val minute = c.get(Calendar.MINUTE)
+-
+-        val tpd = TimePickerDialog(this, { _, selectedHour, selectedMinute ->
+-            // Format Waktu ke HH:MM:SS
+-            val formattedTime = String.format("%02d:%02d:00", selectedHour, selectedMinute)
+-            etTime.setText(formattedTime)
+-        }, hour, minute, true) // 'true' untuk format 24 jam
+-        tpd.show()
+-    }
+-
+-    // Inisialisasi semua View components
+     private fun initViews() {
+         etTitle = findViewById(R.id.et_title)
+         etLocation = findViewById(R.id.et_location)
+@@ -113,10 +58,9 @@
+         btnSaveChanges = findViewById(R.id.btn_save_changes)
+         progressBar = findViewById(R.id.progress_bar)
+ 
+-        // Setup Spinner Adapter
+         ArrayAdapter.createFromResource(
+             this,
+-            com.Ris_Gio.eventmanagement.R.array.status_options,
++            R.array.status_options,
+             android.R.layout.simple_spinner_item
+         ).also { adapter ->
+             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+@@ -124,13 +68,11 @@
+         }
+     }
+ 
+-    // --- Logika Jaringan: GET Single Event (READ) ---
+     private fun fetchEventDetails(id: String) {
+         progressBar.visibility = View.VISIBLE
+ 
+         lifecycleScope.launch(Dispatchers.IO) {
+             try {
+-                // Panggil API untuk mendapatkan detail event berdasarkan ID
+                 val response = RetrofitClient.instance.getEventById(id)
+                 withContext(Dispatchers.Main) {
+                     progressBar.visibility = View.GONE
+@@ -138,45 +80,44 @@
+                     if (response.isSuccessful && response.body()?.data != null) {
+                         fillFormWithData(response.body()!!.data!!)
+                     } else {
+-                        Toast.makeText(this@EditEventActivity, "Gagal memuat detail event.", Toast.LENGTH_SHORT).show()
++                        Toast.makeText(
++                            this@EditEventActivity,
++                            "Gagal memuat detail event.",
++                            Toast.LENGTH_SHORT
++                        ).show()
+                         finish()
+                     }
+                 }
+             } catch (e: Exception) {
+                 withContext(Dispatchers.Main) {
+                     progressBar.visibility = View.GONE
+-                    Toast.makeText(this@EditEventActivity, "Koneksi Gagal: ${e.message}", Toast.LENGTH_SHORT).show()
++                    Toast.makeText(
++                        this@EditEventActivity,
++                        "Koneksi Gagal: ${e.message}",
++                        Toast.LENGTH_SHORT
++                    ).show()
+                     finish()
+                 }
+             }
+         }
+     }
+ 
+-    // Helper untuk mengisi form dengan data lama yang didapat dari API
+     private fun fillFormWithData(event: Event) {
+-        val statusOptions = resources.getStringArray(com.Ris_Gio.eventmanagement.R.array.status_options)
++        val statusOptions = resources.getStringArray(R.array.status_options)
+         val statusIndex = statusOptions.indexOf(event.status)
+ 
+-        supportActionBar?.title = "Edit Event ID: ${event.id ?: "N/A"}"
+-
+         etTitle.setText(event.title)
+         etLocation.setText(event.location)
+         etDate.setText(event.date)
+         etTime.setText(event.time)
+-        // Kapasitas sekarang wajib, jadi jika null, biarkan kosong agar validasi terpicu
+         etCapacity.setText(event.capacity?.toString() ?: "")
+         etDescription.setText(event.description ?: "")
+         if (statusIndex >= 0) {
+-            spinnerStatus.setSelection(statusIndex) // Pilih status yang sesuai
++            spinnerStatus.setSelection(statusIndex)
+         }
+     }
+ 
+-    // --- FUNGSI VALIDASI FORMAT DIHAPUS karena DatePicker/TimePicker sudah menjamin format ---
+-
+-
+-    // --- Logika Jaringan: PUT Update Event (UPDATE) ---
+     private fun executeUpdateEvent(id: String) {
+-        // 1. Ambil input dari form
+         val title = etTitle.text.toString().trim()
+         val location = etLocation.text.toString().trim()
+         val date = etDate.text.toString().trim()
+@@ -185,56 +126,51 @@
+         val description = etDescription.text.toString().trim()
+         val status = spinnerStatus.selectedItem.toString()
+ 
+-        // 2. Validasi Wajib Isi (Semua field wajib diisi)
+-        if (title.isEmpty() || location.isEmpty() || date.isEmpty() || time.isEmpty() || capacityStr.isEmpty()) {
++        if (title.isEmpty() || location.isEmpty() || date.isEmpty() || time.isEmpty()) {
+             Toast.makeText(this, "Semua field bertanda * wajib diisi.", Toast.LENGTH_LONG).show()
+             return
+         }
+-
+-        // 3. Konversi kapasitas dan pastikan nilainya valid
+-        val capacityInt = capacityStr.toIntOrNull()
+-        if (capacityInt == null || capacityInt <= 0) {
+-            Toast.makeText(this, "Kapasitas harus berupa angka valid (lebih dari 0).", Toast.LENGTH_LONG).show()
+-            return
+-        }
+-
+-        // Validasi format tanggal dan waktu DIBUANG karena sudah dijamin oleh picker.
+-        // Cukup pastikan EditText tidak kosong.
+-
+         val updatedEventData = Event(
+-            id = id, // ID wajib disertakan di data class
++            id = id,
+             title = title,
+             date = date,
+             time = time,
+             location = location,
+-            capacity = capacityInt, // Gunakan integer yang sudah divalidasi
++            capacity = capacityStr.toIntOrNull(),
+             description = description.ifEmpty { null },
+             status = status
+         )
+ 
+-        // Coroutine untuk panggilan API
+         lifecycleScope.launch(Dispatchers.IO) {
+             try {
+-                // Panggil endpoint PUT Update Event (ID di pass via @Query)
+                 val response = RetrofitClient.instance.updateEvent(id, updatedEventData)
+ 
+                 withContext(Dispatchers.Main) {
+                     if (response.isSuccessful && response.body()?.status == 200) {
+-                        Toast.makeText(this@EditEventActivity,
+-                            "✅ Event Berhasil Diperbarui!", Toast.LENGTH_LONG).show()
++                        Toast.makeText(
++                            this@EditEventActivity,
++                            "✅ Event Berhasil Diperbarui!", Toast.LENGTH_LONG
++                        ).show()
+ 
+-                        setResult(RESULT_OK) // Set result OK agar MainActivity me-refresh
++                        setResult(RESULT_OK)
+                         finish()
+                     } else {
+-                        val message = response.body()?.message ?: "Gagal memperbarui event (400/500)."
+-                        Toast.makeText(this@EditEventActivity,
+-                            "Gagal: $message", Toast.LENGTH_LONG).show()
++                        val message =
++                            response.body()?.message ?: "Gagal memperbarui event (400/500)."
++                        Toast.makeText(
++                            this@EditEventActivity,
++                            "Gagal: $message", Toast.LENGTH_LONG
++                        ).show()
+                         Log.e("API_UPDATE", "Error: ${response.code()}, Message: $message")
+                     }
+                 }
+             } catch (e: Exception) {
+                 withContext(Dispatchers.Main) {
+-                    Toast.makeText(this@EditEventActivity, "Koneksi Gagal: ${e.message}", Toast.LENGTH_LONG).show()
++                    Toast.makeText(
++                        this@EditEventActivity,
++                        "Koneksi Gagal: ${e.message}",
++                        Toast.LENGTH_LONG
++                    ).show()
+                 }
+             }
+         }
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout\r\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".MainActivity\">\r\n\r\n    <!-- Header Judul -->\r\n    <TextView\r\n        android:id=\"@+id/tv_header_title\"\r\n        android:layout_width=\"0dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:textSize=\"22sp\"\r\n        android:textStyle=\"bold\"\r\n        android:padding=\"16dp\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"/>\r\n\r\n\r\n\r\n    <!-- Progress Bar (Indikator Loading) -->\r\n    <androidx.recyclerview.widget.RecyclerView\r\n        android:id=\"@+id/rv_events\"\r\n        android:layout_width=\"0dp\"\r\n        android:layout_height=\"0dp\"\r\n        android:background=\"#CE1D73\"\r\n        android:clipToPadding=\"false\"\r\n        android:padding=\"8dp\"\r\n        app:layoutManager=\"androidx.recyclerview.widget.LinearLayoutManager\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.0\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/tv_header_title\"\r\n        app:layout_constraintVertical_bias=\"0.0\"\r\n        tools:listitem=\"@layout/item_event\" />\r\n\r\n    <ProgressBar\r\n        android:id=\"@+id/progress_bar\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:visibility=\"gone\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"/>\r\n\r\n    <!-- Floating Action Button untuk navigasi ke Create Event -->\r\n    <com.google.android.material.floatingactionbutton.FloatingActionButton\r\n        android:id=\"@+id/fab_add_event\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_margin=\"16dp\"\r\n        android:src=\"@android:drawable/ic_input_add\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        android:contentDescription=\"Tambah Event Baru\"/>\r\n\r\n\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+--- a/app/src/main/res/layout/activity_main.xml	(revision 753cc4f47f57de9b72f5eb943f66c94937638f1d)
++++ b/app/src/main/res/layout/activity_main.xml	(date 1765458175327)
+@@ -19,14 +19,13 @@
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"/>
+ 
+-
++    <!-- RecyclerView untuk Menampilkan Daftar Event -->
+ 
+     <!-- Progress Bar (Indikator Loading) -->
+     <androidx.recyclerview.widget.RecyclerView
+         android:id="@+id/rv_events"
+         android:layout_width="0dp"
+         android:layout_height="0dp"
+-        android:background="#CE1D73"
+         android:clipToPadding="false"
+         android:padding="8dp"
+         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+@@ -34,7 +33,7 @@
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.0"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toBottomOf="@+id/tv_header_title"
++        app:layout_constraintTop_toBottomOf="@id/tv_header_title"
+         app:layout_constraintVertical_bias="0.0"
+         tools:listitem="@layout/item_event" />
+ 
+@@ -59,6 +58,4 @@
+         app:layout_constraintEnd_toEndOf="parent"
+         android:contentDescription="Tambah Event Baru"/>
+ 
+-
+-
+ </androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
