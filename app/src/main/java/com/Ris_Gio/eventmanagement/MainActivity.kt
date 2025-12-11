@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
     private lateinit var fabAddEvent: FloatingActionButton
 
     // VARIABEL UNTUK MENYIMPAN FUNGSI CALLBACK PENCARIAN TANGGAL
-    // Digunakan untuk menentukan fungsi mana yang harus dipanggil setelah DatePicker selesai
     private var dateSearchCallback: ((String) -> Unit)? = null
 
     // Launcher untuk Activity Create
@@ -129,7 +128,7 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
         }
     }
 
-    // --- HELPER: DATE PICKER DIALOG (BARU) ---
+    // --- HELPER: DATE PICKER DIALOG ---
     private fun showDatePickerDialog() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -148,6 +147,8 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
                 )
                 // Panggil callback setelah tanggal dipilih
                 dateSearchCallback?.invoke(formattedDate)
+                // Reset callback setelah digunakan
+                dateSearchCallback = null
             },
             year,
             month,
@@ -172,7 +173,7 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
                     Toast.makeText(this, "Masukkan ID (angka) yang valid.", Toast.LENGTH_LONG).show()
                 }
             }
-            .setNeutralButton("Cari Tanggal") { _, _ -> // Tombol untuk Cari Tanggal
+            .setNeutralButton("Cari Tanggal") { _, _ -> // Tombol untuk Cari Tanggal (Menggunakan Picker)
                 // Set callback untuk filter daftar event utama
                 dateSearchCallback = { selectedDate ->
                     fetchEvents(dateFrom = selectedDate, dateTo = selectedDate)
@@ -184,10 +185,10 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
             .show()
     }
 
-    // --- FUNGSI 2: CARI & MUAT EDIT (ID -> EDIT) ---
+    // --- FUNGSI 2: CARI & MUAT EDIT (HANYA ID - TANPA FILTER TANGGAL) ---
     private fun promptSearchAndEdit() {
         val inputEditText = EditText(this).apply {
-            hint = "Masukkan ID Event" // Hanya fokus pada ID untuk Edit
+            hint = "Masukkan ID Event"
         }
 
         AlertDialog.Builder(this)
@@ -196,18 +197,11 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
             .setPositiveButton("Cari ID") { dialog, _ ->
                 val searchTerm = inputEditText.text.toString().trim()
                 if (searchTerm.matches(Regex("^\\d+$"))) {
+                    // Hanya ID yang diterima, langsung luncurkan Edit Activity
                     launchEditActivityById(searchTerm)
                 } else {
-                    Toast.makeText(this, "Masukkan ID (angka) yang valid.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Masukkan ID Event (angka) untuk Edit.", Toast.LENGTH_LONG).show()
                 }
-            }
-            .setNeutralButton("Filter Tanggal") { _, _ -> // Opsi untuk filter (jika dibutuhkan)
-                // Set callback untuk filter daftar event utama
-                dateSearchCallback = { selectedDate ->
-                    fetchEvents(dateFrom = selectedDate, dateTo = selectedDate)
-                    Toast.makeText(this, "Daftar Event difilter berdasarkan Tanggal: $selectedDate", Toast.LENGTH_LONG).show()
-                }
-                showDatePickerDialog() // Panggil pemilih tanggal
             }
             .setNegativeButton("Batal", null)
             .show()
