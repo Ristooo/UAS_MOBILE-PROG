@@ -1,9 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
-        android:id="@+id/action_stats_filter"
+        android:id="@+id/action_quick_actions"
         android:icon="@android:drawable/ic_menu_sort_by_size"
-        android:title="Statistik &amp; Filter"
-        app:showAsAction="ifRoom" />
+        android:title="Aksi Cepat"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="10">
+
+        <!-- Sub-menu untuk menampung semua aksi navigasi -->
+        <menu>
+            <!-- 1. Statistik -->
+            <item
+                android:id="@+id/action_view_stats"
+                android:title="Lihat Statistik Event"
+                android:icon="@android:drawable/ic_menu_sort_by_size"/>
+
+            <!-- 2. edit Event (cari by id) -->
+            <item
+                android:id="@+id/action_search_edit"
+                android:title="Edit Event (masukan Id)"
+                android:icon="@android:drawable/ic_menu_edit"/>
+
+            <!-- BARU: Aksi Hapus Event via ID -->
+            <item
+                android:id="@+id/action_delete_event"
+                android:title="Hapus Event (by ID)"
+                android:icon="@android:drawable/ic_menu_delete"/>
+
+            <item
+                android:id="@+id/action_view_dashboard"
+                android:title="Kembali ke Dashboard"
+                android:icon="@android:drawable/ic_menu_view"/>
+        </menu>
+    </item>
 </menu>

@@ -1,5 +1,7 @@
 package com.Ris_Gio.eventmanagement
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -16,8 +18,11 @@ import com.Ris_Gio.eventmanagement.networks.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.* // Import untuk Calendar
 
 class EditEventActivity : AppCompatActivity() {
+
+    // Deklarasi View (Sama seperti NewEventActivity)
     private lateinit var etTitle: EditText
     private lateinit var etLocation: EditText
     private lateinit var etDate: EditText
@@ -28,11 +33,17 @@ class EditEventActivity : AppCompatActivity() {
     private lateinit var btnSaveChanges: Button
     private lateinit var progressBar: ProgressBar
 
-    private var eventId: String? = null
+    private var eventId: String? = null // ID event yang akan di-edit
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_EventManagementApp)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_event)
+
+        // AKTIFKAN TOMBOL UP/KEMBALI KE PARENT ACTIVITY
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        // 1. Ambil ID dari Intent
         eventId = intent.getStringExtra("EXTRA_EVENT_ID")
 
         if (eventId == null) {
@@ -40,13 +51,57 @@ class EditEventActivity : AppCompatActivity() {
             finish()
             return
         }
+
+        // 2. Inisialisasi View
         initViews()
+
+        // 3. Muat Data Lama (GET by ID)
         fetchEventDetails(eventId!!)
+
+        // 4. Set listener untuk tombol "Simpan Perubahan"
         btnSaveChanges.setOnClickListener {
             executeUpdateEvent(eventId!!)
         }
+
+        // BARU: Set listener untuk Date dan Time Picker
+        etDate.setOnClickListener {
+            showDatePicker()
+        }
+        etTime.setOnClickListener {
+            showTimePicker()
+        }
     }
 
+    // --- FUNGSI DATE AND TIME PICKER (BARU) ---
+
+    private fun showDatePicker() {
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+
+        val dpd = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+            // Format Tanggal ke YYYY-MM-DD
+            val formattedDate = String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
+            etDate.setText(formattedDate)
+        }, year, month, day)
+        dpd.show()
+    }
+
+    private fun showTimePicker() {
+        val c = Calendar.getInstance()
+        val hour = c.get(Calendar.HOUR_OF_DAY)
+        val minute = c.get(Calendar.MINUTE)
+
+        val tpd = TimePickerDialog(this, { _, selectedHour, selectedMinute ->
+            // Format Waktu ke HH:MM:SS
+            val formattedTime = String.format("%02d:%02d:00", selectedHour, selectedMinute)
+            etTime.setText(formattedTime)
+        }, hour, minute, true) // 'true' untuk format 24 jam
+        tpd.show()
+    }
+
+    // Inisialisasi semua View components
     private fun initViews() {
         etTitle = findViewById(R.id.et_title)
         etLocation = findViewById(R.id.et_location)
@@ -58,9 +113,10 @@ class EditEventActivity : AppCompatActivity() {
         btnSaveChanges = findViewById(R.id.btn_save_changes)
         progressBar = findViewById(R.id.progress_bar)
 
+        // Setup Spinner Adapter
         ArrayAdapter.createFromResource(
             this,
-            R.array.status_options,
+            com.Ris_Gio.eventmanagement.R.array.status_options,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -68,11 +124,13 @@ class EditEventActivity : AppCompatActivity() {
         }
     }
 
+    // --- Logika Jaringan: GET Single Event (READ) ---
     private fun fetchEventDetails(id: String) {
         progressBar.visibility = View.VISIBLE
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
+                // Panggil API untuk mendapatkan detail event berdasarkan ID
                 val response = RetrofitClient.instance.getEventById(id)
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
@@ -80,44 +138,45 @@ class EditEventActivity : AppCompatActivity() {
                     if (response.isSuccessful && response.body()?.data != null) {
                         fillFormWithData(response.body()!!.data!!)
                     } else {
-                        Toast.makeText(
-                            this@EditEventActivity,
-                            "Gagal memuat detail event.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this@EditEventActivity, "Gagal memuat detail event.", Toast.LENGTH_SHORT).show()
                         finish()
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
-                    Toast.makeText(
-                        this@EditEventActivity,
-                        "Koneksi Gagal: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this@EditEventActivity, "Koneksi Gagal: ${e.message}", Toast.LENGTH_SHORT).show()
                     finish()
                 }
             }
         }
     }
 
+    // Helper untuk mengisi form dengan data lama yang didapat dari API
     private fun fillFormWithData(event: Event) {
-        val statusOptions = resources.getStringArray(R.array.status_options)
+        val statusOptions = resources.getStringArray(com.Ris_Gio.eventmanagement.R.array.status_options)
         val statusIndex = statusOptions.indexOf(event.status)
+
+        supportActionBar?.title = "Edit Event ID: ${event.id ?: "N/A"}"
 
         etTitle.setText(event.title)
         etLocation.setText(event.location)
         etDate.setText(event.date)
         etTime.setText(event.time)
+        // Kapasitas sekarang wajib, jadi jika null, biarkan kosong agar validasi terpicu
         etCapacity.setText(event.capacity?.toString() ?: "")
         etDescription.setText(event.description ?: "")
         if (statusIndex >= 0) {
-            spinnerStatus.setSelection(statusIndex)
+            spinnerStatus.setSelection(statusIndex) // Pilih status yang sesuai
         }
     }
 
+    // --- FUNGSI VALIDASI FORMAT DIHAPUS karena DatePicker/TimePicker sudah menjamin format ---
+
+
+    // --- Logika Jaringan: PUT Update Event (UPDATE) ---
     private fun executeUpdateEvent(id: String) {
+        // 1. Ambil input dari form
         val title = etTitle.text.toString().trim()
         val location = etLocation.text.toString().trim()
         val date = etDate.text.toString().trim()
@@ -126,51 +185,56 @@ class EditEventActivity : AppCompatActivity() {
         val description = etDescription.text.toString().trim()
         val status = spinnerStatus.selectedItem.toString()
 
-        if (title.isEmpty() || location.isEmpty() || date.isEmpty() || time.isEmpty()) {
+        // 2. Validasi Wajib Isi (Semua field wajib diisi)
+        if (title.isEmpty() || location.isEmpty() || date.isEmpty() || time.isEmpty() || capacityStr.isEmpty()) {
             Toast.makeText(this, "Semua field bertanda * wajib diisi.", Toast.LENGTH_LONG).show()
             return
         }
+
+        // 3. Konversi kapasitas dan pastikan nilainya valid
+        val capacityInt = capacityStr.toIntOrNull()
+        if (capacityInt == null || capacityInt <= 0) {
+            Toast.makeText(this, "Kapasitas harus berupa angka valid (lebih dari 0).", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        // Validasi format tanggal dan waktu DIBUANG karena sudah dijamin oleh picker.
+        // Cukup pastikan EditText tidak kosong.
+
         val updatedEventData = Event(
-            id = id,
+            id = id, // ID wajib disertakan di data class
             title = title,
             date = date,
             time = time,
             location = location,
-            capacity = capacityStr.toIntOrNull(),
+            capacity = capacityInt, // Gunakan integer yang sudah divalidasi
             description = description.ifEmpty { null },
             status = status
         )
 
+        // Coroutine untuk panggilan API
         lifecycleScope.launch(Dispatchers.IO) {
             try {
+                // Panggil endpoint PUT Update Event (ID di pass via @Query)
                 val response = RetrofitClient.instance.updateEvent(id, updatedEventData)
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful && response.body()?.status == 200) {
-                        Toast.makeText(
-                            this@EditEventActivity,
-                            "✅ Event Berhasil Diperbarui!", Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(this@EditEventActivity,
+                            "✅ Event Berhasil Diperbarui!", Toast.LENGTH_LONG).show()
 
-                        setResult(RESULT_OK)
+                        setResult(RESULT_OK) // Set result OK agar MainActivity me-refresh
                         finish()
                     } else {
-                        val message =
-                            response.body()?.message ?: "Gagal memperbarui event (400/500)."
-                        Toast.makeText(
-                            this@EditEventActivity,
-                            "Gagal: $message", Toast.LENGTH_LONG
-                        ).show()
+                        val message = response.body()?.message ?: "Gagal memperbarui event (400/500)."
+                        Toast.makeText(this@EditEventActivity,
+                            "Gagal: $message", Toast.LENGTH_LONG).show()
                         Log.e("API_UPDATE", "Error: ${response.code()}, Message: $message")
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@EditEventActivity,
-                        "Koneksi Gagal: ${e.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(this@EditEventActivity, "Koneksi Gagal: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".NewEventActivity"
-    android:padding="16dp">
+    android:padding="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,11 +14,12 @@
         android:orientation="vertical">
 
 
+
         <!-- 1. Judul Event -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="20dp"
             android:hint="Nama Event *">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -50,39 +51,45 @@
             android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Tanggal (YYYY-MM-DD) *">
+                android:hint="Tanggal *">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:clickable="true" /> <!-- KRITIS: Tidak bisa diketik, hanya diklik -->
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:hint="Waktu (HH:MM:SS) *">
+                android:hint="Waktu *">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:clickable="true" /> <!-- KRITIS: Tidak bisa diketik, hanya diklik -->
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <!-- 4. Kapasitas -->
+        <!-- 4. Kapasitas (DIJADIKAN WAJIB) -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="Kapasitas (Opsional)">
+            android:hint="Kapasitas *"> <!-- DIUBAH DARI (Opsional) MENJADI * -->
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_capacity"
@@ -107,7 +114,7 @@
                 android:inputType="textMultiLine" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- 6. Status (Kita buat default ke 'upcoming' saat membuat baru, tapi tetap fleksibel) -->
+        <!-- 6. Status -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

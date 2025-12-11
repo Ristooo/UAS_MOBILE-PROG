@@ -1,6 +1,5 @@
 package com.Ris_Gio.eventmanagement
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -18,7 +17,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.widget.ArrayAdapter
 import android.util.Log
-import android.widget.LinearLayout
 
 class StatsFilterActivity : AppCompatActivity() {
 
@@ -28,17 +26,20 @@ class StatsFilterActivity : AppCompatActivity() {
     private lateinit var tvOngoing: TextView
     private lateinit var tvCompleted: TextView
     private lateinit var progressBar: ProgressBar
-    private lateinit var tvStatusMessage: TextView
 
     // Deklarasi View Filter
     private lateinit var spinnerFilter: Spinner
     private lateinit var btnApplyFilter: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Panggil setTheme secara eksplisit untuk mengatasi IllegalStateException
+        setTheme(R.style.Theme_EventManagementApp)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stats_filter)
 
-        // Panggil initViews sebelum fetchStatistics
+        // AKTIFKAN TOMBOL UP/KEMBALI KE PARENT ACTIVITY (BARU)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         initViews()
         fetchStatistics() // Memuat data statistik dan menampilkannya
 
@@ -49,14 +50,12 @@ class StatsFilterActivity : AppCompatActivity() {
 
     private fun initViews() {
         // --- Statistik View Initialization ---
-        // Binding Views ke ID XML
         try {
             tvTotal = findViewById(R.id.tv_stat_total)
             tvUpcoming = findViewById(R.id.tv_stat_upcoming)
             tvOngoing = findViewById(R.id.tv_stat_ongoing)
             tvCompleted = findViewById(R.id.tv_stat_completed)
             progressBar = findViewById(R.id.progress_bar_stats)
-            tvStatusMessage = findViewById(R.id.tv_status_message)
 
             // --- Filter View Initialization ---
             spinnerFilter = findViewById(R.id.spinner_main_filter)
@@ -72,19 +71,14 @@ class StatsFilterActivity : AppCompatActivity() {
                 spinnerFilter.adapter = adapter
             }
         } catch (e: Exception) {
-            // Jika ada View yang tidak ditemukan (misal, typo ID di XML), log error
             Log.e("StatsActivity", "Error initializing views (ID Mismatch): ${e.message}", e)
-            Toast.makeText(this, "Kesalahan fatal: ID tampilan tidak ditemukan.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Kesalahan Fatal: Cek ID di activity_stats_filter.xml", Toast.LENGTH_LONG).show()
         }
     }
 
     // --- Logika Jaringan: GET Statistics (?stats=1) ---
     private fun fetchStatistics() {
         progressBar.visibility = View.VISIBLE
-        tvStatusMessage.visibility = View.GONE // Pastikan pesan error tersembunyi
-        val statsContainer = findViewById<LinearLayout>(R.id.ll_stats_container)
-        statsContainer.visibility = View.GONE
-
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 // Panggil endpoint GET /api.php?stats=1
@@ -95,10 +89,7 @@ class StatsFilterActivity : AppCompatActivity() {
 
                     if (response.isSuccessful && response.body()?.data != null) {
                         displayStatistics(response.body()!!.data!!) // Tampilkan data jika sukses
-                        statsContainer.visibility = View.VISIBLE
                     } else {
-                        tvStatusMessage.text = "Gagal memuat statistik. Server Code: ${response.code()}"
-                        tvStatusMessage.visibility = View.VISIBLE
                         Log.e("API_STATS", "Failed to load stats. Code: ${response.code()}")
                         // Tampilkan pesan error jika server merespon dengan kode error
                         Toast.makeText(this@StatsFilterActivity, "Gagal memuat statistik. Server Code: ${response.code()}", Toast.LENGTH_LONG).show()

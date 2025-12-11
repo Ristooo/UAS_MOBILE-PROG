@@ -21,6 +21,8 @@ import kotlinx.coroutines.withContext
 import android.view.Menu
 import android.view.MenuItem
 import com.Ris_Gio.eventmanagement.R
+import android.widget.EditText
+import android.content.Context
 
 class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
 
@@ -45,7 +47,7 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             val statusFilter = result.data?.getStringExtra("EXTRA_FILTER_STATUS")
-            fetchEvents(statusFilter) // Muat ulang dengan filter baru
+            fetchEvents(statusFilter = statusFilter) // Muat ulang dengan filter status baru
             Toast.makeText(this, "Filter diterapkan!", Toast.LENGTH_SHORT).show()
         }
     }
@@ -91,22 +93,99 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_stats_filter -> {
+            R.id.action_view_stats -> {
+                // Aksi: Lihat Statistik Event
                 val intent = Intent(this, StatsFilterActivity::class.java)
                 filterStatsResultLauncher.launch(intent)
+                true
+            }
+            R.id.action_search_edit -> {
+                // Aksi: Cari Event berdasarkan ID dan muat Edit Activity
+                promptForEventIdForEdit()
+                true
+            }
+            R.id.action_delete_event -> { // BARU: Menangani aksi Hapus Event
+                promptForEventIdForDelete()
+                true
+            }
+            R.id.action_view_dashboard -> {
+                // Aksi: Kembali ke Dashboard (Reload/Refresh tanpa filter)
+                fetchEvents()
+                Toast.makeText(this, "Dashboard diperbarui!", Toast.LENGTH_SHORT).show()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    // --- Logika Jaringan: GET All Events (READ/FILTER) ---
+    // --- Fungsi Prompt Input ID untuk Edit ---
+    private fun promptForEventIdForEdit() { // Nama fungsi diperjelas
+        val inputEditText = EditText(this)
+        inputEditText.hint = "Masukkan Event ID (Contoh: 123)"
+
+        AlertDialog.Builder(this)
+            .setTitle("Cari Event untuk Edit (Berdasarkan ID)")
+            .setView(inputEditText)
+            .setPositiveButton("Cari") { dialog, _ ->
+                val eventId = inputEditText.text.toString().trim()
+                if (eventId.isNotEmpty()) {
+                    loadEventForEdit(eventId)
+                } else {
+                    Toast.makeText(this, "ID Event tidak boleh kosong.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Batal", null)
+            .show()
+    }
+
+    // --- Fungsi Prompt Input ID untuk Hapus (BARU) ---
+    private fun promptForEventIdForDelete() {
+        val inputEditText = EditText(this)
+        inputEditText.hint = "Masukkan Event ID untuk dihapus"
+
+        AlertDialog.Builder(this)
+            .setTitle("Hapus Event (Berdasarkan ID)")
+            .setView(inputEditText)
+            .setPositiveButton("Hapus") { _, _ ->
+                val eventId = inputEditText.text.toString().trim()
+                if (eventId.isNotEmpty()) {
+                    // Panggil onDeleteClicked (yang akan memanggil executeDelete setelah konfirmasi)
+                    onDeleteClicked(eventId)
+                } else {
+                    Toast.makeText(this, "ID Event tidak boleh kosong.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Batal", null)
+            .show()
+    }
+
+    // --- Fungsi Navigasi ke Edit Event (Muat Event Berdasarkan ID) ---
+    private fun loadEventForEdit(eventId: String) {
+        val intent = Intent(this, EditEventActivity::class.java).apply {
+            putExtra("EXTRA_EVENT_ID", eventId)
+        }
+        editEventResultLauncher.launch(intent)
+    }
+
+    // --- Implementasi Item Click (Detail View) ---
+    override fun onItemClicked(event: Event) {
+        val intent = Intent(this, EventDetailActivity::class.java).apply {
+            // Mengirim seluruh objek Event ke Activity Detail
+            putExtra("EXTRA_EVENT_DETAIL", event)
+        }
+        startActivity(intent)
+    }
+
+    // --- Logika Jaringan: GET All Events ---
     private fun fetchEvents(statusFilter: String? = null) {
         progressBar.visibility = View.VISIBLE
+
+        val statusParam = if (statusFilter.isNullOrEmpty() || statusFilter == "Semua Event") null else statusFilter
+
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // Mengirim status filter ke API
-                val response = RetrofitClient.instance.getAllEvents(status = statusFilter)
+                // Mengirim hanya status filter ke API
+                val response = RetrofitClient.instance.getAllEvents(status = statusParam)
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
 
@@ -115,7 +194,8 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
                         if (!events.isNullOrEmpty()) {
                             eventAdapter.updateData(events)
                         } else {
-                            Toast.makeText(this@MainActivity, "Data event kosong.", Toast.LENGTH_LONG).show()
+                            Toast.makeText(this@MainActivity, "Data event kosong atau tidak ditemukan.", Toast.LENGTH_LONG).show()
+                            eventAdapter.updateData(emptyList()) // Kosongkan daftar
                         }
                     } else {
                         Toast.makeText(this@MainActivity, "Gagal memuat data: ${response.code()}", Toast.LENGTH_LONG).show()
@@ -132,20 +212,17 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
         }
     }
 
-    // --- Implementasi OnEventActionListener ---
-
-    // Aksi saat tombol Edit diklik (UPDATE)
     override fun onEditClicked(event: Event) {
         event.id?.let { id ->
             val intent = Intent(this, EditEventActivity::class.java).apply {
-                putExtra("EXTRA_EVENT_ID", id) // Kirim ID event
+                putExtra("EXTRA_EVENT_ID", id)
             }
-            editEventResultLauncher.launch(intent) // Gunakan launcher Edit
+            editEventResultLauncher.launch(intent)
         } ?: Toast.makeText(this, "Event ID hilang, tidak bisa mengedit.", Toast.LENGTH_SHORT).show()
     }
 
-    // Aksi saat tombol Delete diklik (DELETE)
     override fun onDeleteClicked(eventId: String) {
+        // Logika konfirmasi hapus dipanggil dari adapter atau promptForEventIdForDelete
         AlertDialog.Builder(this)
             .setTitle("Konfirmasi Hapus")
             .setMessage("Anda yakin ingin menghapus Event ID: $eventId? Aksi ini tidak dapat dibatalkan.")
@@ -156,7 +233,6 @@ class MainActivity : AppCompatActivity(), EventAdapter.OnEventActionListener {
             .show()
     }
 
-    // --- Logika Jaringan: executeDelete ---
     private fun executeDelete(eventId: String) {
         progressBar.visibility = View.VISIBLE
 

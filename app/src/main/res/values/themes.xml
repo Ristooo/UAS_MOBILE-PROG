@@ -1,10 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TEMA UTAMA: Ganti Theme.Material3 menjadi Theme.AppCompat.Light.DarkActionBar untuk kompatibilitas.
-         Ini akan menyelesaikan FATAL EXCEPTION: IllegalStateException. -->
-    <style name="Theme.EventManagementApp" parent="Theme.AppCompat.Light.DarkActionBar">
+    <!-- KRITIS: Ganti parent menjadi Theme.MaterialComponents.DayNight.DarkActionBar
+         Ini menyelesaikan error InflateException dan IllegalArgumentException. -->
+    <style name="Theme.EventManagementApp" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Definisi warna utama yang harus ada di colors.xml -->
-        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimary">@color/teal_700</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/teal_200</item>
@@ -14,7 +14,9 @@
         <!-- Setting status bar color -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
 
-        <!-- Karena kita menggunakan tema DarkActionBar, Action Bar akan muncul secara otomatis. -->
+        <!-- Tambahkan atribut yang mungkin hilang yang dibutuhkan oleh TextInputLayout -->
+        <item name="textAppearanceHeadline6">@style/TextAppearance.AppCompat.Headline</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.AppCompat.Subhead</item>
     </style>
 
     <!-- STYLE-STYLE UI SPESIFIK -->

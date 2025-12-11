@@ -17,16 +17,24 @@ class EventAdapter(
     interface OnEventActionListener {
         fun onDeleteClicked(eventId: String)
         fun onEditClicked(event: Event)
+        fun onItemClicked(event: Event)
     }
 
     inner class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        // Pastikan ID di sini sesuai dengan item_event.xml
+        val id: TextView = itemView.findViewById(R.id.tv_event_id)
         val title: TextView = itemView.findViewById(R.id.tv_event_title)
         val dateTime: TextView = itemView.findViewById(R.id.tv_event_date_time)
         val location: TextView = itemView.findViewById(R.id.tv_event_location)
         val status: TextView = itemView.findViewById(R.id.tv_event_status)
-        val btnEdit: ImageButton = itemView.findViewById(R.id.btn_edit)
-        val btnDelete: ImageButton = itemView.findViewById(R.id.btn_delete)
+
+        init {
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    listener.onItemClicked(eventList[position])
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
@@ -38,21 +46,16 @@ class EventAdapter(
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
         val event = eventList[position]
 
-        holder.title.text = event.title
-        holder.dateTime.text = "Tanggal: ${event.date} | ${event.time}"
-        holder.location.text = "Lokasi: ${event.location}"
-        holder.status.text = event.status.uppercase()
+        // Menggunakan operator Elvis (?: "Nilai Default") untuk Null Safety
+        holder.id.text = "ID: ${event.id ?: "N/A"}"
+        holder.title.text = event.title ?: "No Title"
+        holder.dateTime.text = "Tanggal: ${event.date ?: "N/A"} | ${event.time ?: "N/A"}"
+        holder.location.text = "Lokasi: ${event.location ?: "Unknown"}"
 
-        // Setup listener di ViewHolder
-        holder.btnEdit.setOnClickListener {
-            listener.onEditClicked(event)
-        }
+        // Menggunakan Safe Call (?.) pada String sebelum memanggil .uppercase()
+        // Ini mengatasi error yang Anda lihat di Logcat
+        holder.status.text = event.status?.uppercase() ?: "UPCOMING"
 
-        holder.btnDelete.setOnClickListener {
-            event.id?.let { id ->
-                listener.onDeleteClicked(id)
-            }
-        }
     }
 
     override fun getItemCount(): Int = eventList.size
