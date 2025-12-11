@@ -1,10 +1,7 @@
 package com.Ris_Gio.eventmanagement
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -18,7 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.Ris_Gio.eventmanagement.R
-import java.util.* // Import untuk Calendar
 
 class NewEventActivity : AppCompatActivity() {
     private lateinit var etTitle: EditText
@@ -36,7 +32,7 @@ class NewEventActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_event)
 
-        // AKTIFKAN TOMBOL UP/KEMBALI KE PARENT ACTIVITY
+        // AKTIFKAN TOMBOL UP/KEMBALI KE PARENT ACTIVITY (BARU)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Inisialisasi View
@@ -62,82 +58,50 @@ class NewEventActivity : AppCompatActivity() {
         btnCreateEvent.setOnClickListener {
             createNewEvent()
         }
-
-        // BARU: Set listener untuk Date dan Time Picker
-        etDate.setOnClickListener {
-            showDatePicker()
-        }
-        etTime.setOnClickListener {
-            showTimePicker()
-        }
     }
 
-    // --- FUNGSI DATE AND TIME PICKER (BARU) ---
-
-    private fun showDatePicker() {
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
-
-        val dpd = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-            // Format Tanggal ke YYYY-MM-DD
-            val formattedDate = String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
-            etDate.setText(formattedDate)
-        }, year, month, day)
-        dpd.show()
+    // Fungsi validasi format Tanggal (YYYY-MM-DD)
+    private fun isValidDateFormat(date: String): Boolean {
+        return date.matches(Regex("^\\d{4}-\\d{2}-\\d{2}$"))
     }
 
-    private fun showTimePicker() {
-        val c = Calendar.getInstance()
-        val hour = c.get(Calendar.HOUR_OF_DAY)
-        val minute = c.get(Calendar.MINUTE)
-
-        val tpd = TimePickerDialog(this, { _, selectedHour, selectedMinute ->
-            // Format Waktu ke HH:MM:SS
-            val formattedTime = String.format("%02d:%02d:00", selectedHour, selectedMinute)
-            etTime.setText(formattedTime)
-        }, hour, minute, true) // 'true' untuk format 24 jam
-        tpd.show()
+    // Fungsi validasi format Waktu (HH:MM:SS atau HH:MM)
+    private fun isValidTimeFormat(time: String): Boolean {
+        return time.matches(Regex("^\\d{2}:\\d{2}:\\d{2}$")) || time.matches(Regex("^\\d{2}:\\d{2}$"))
     }
-
-    // Fungsi validasi format Tanggal (DIHAPUS karena picker menjamin format)
-    // private fun isValidDateFormat(date: String): Boolean { ... }
-
-    // Fungsi validasi format Waktu (DIHAPUS karena picker menjamin format)
-    // private fun isValidTimeFormat(time: String): Boolean { ... }
 
     private fun createNewEvent() {
         val title = etTitle.text.toString().trim()
         val location = etLocation.text.toString().trim()
         val date = etDate.text.toString().trim()
         val time = etTime.text.toString().trim()
-        val capacityStr = etCapacity.text.toString().trim() // Ambil nilai kapasitas
+        val capacityStr = etCapacity.text.toString().trim()
         val description = etDescription.text.toString().trim()
         val status = spinnerStatus.selectedItem.toString()
 
-        // 1. Validasi Wajib Isi (Menambahkan capacityStr.isEmpty() untuk Kapasitas)
-        if (title.isEmpty() || location.isEmpty() || date.isEmpty() || time.isEmpty() || capacityStr.isEmpty()) {
+        // 1. Validasi Wajib Isi
+        if (title.isEmpty() || location.isEmpty() || date.isEmpty() || time.isEmpty()) {
             Toast.makeText(this, "Semua field bertanda * wajib diisi.", Toast.LENGTH_LONG).show()
             return
         }
 
-        // Validasi format tanggal dan waktu DIBUANG karena sudah dijamin oleh picker.
-
-        // 2. Konversi kapasitas dan pastikan nilainya valid
-        val capacityInt = capacityStr.toIntOrNull()
-        if (capacityInt == null || capacityInt <= 0) {
-            Toast.makeText(this, "Kapasitas harus berupa angka valid (lebih dari 0).", Toast.LENGTH_LONG).show()
+        // 2. Validasi Format API
+        if (!isValidDateFormat(date)) {
+            Toast.makeText(this, "Gagal: Format Tanggal harus YYYY-MM-DD (Contoh: 2025-12-23).", Toast.LENGTH_LONG).show()
             return
         }
 
+        if (!isValidTimeFormat(time)) {
+            Toast.makeText(this, "Gagal: Format Waktu harus HH:MM:SS atau HH:MM (Contoh: 19:03:02).", Toast.LENGTH_LONG).show()
+            return
+        }
 
         val newEventData = Event(
             title = title,
             date = date,
             time = time,
             location = location,
-            capacity = capacityInt, // Gunakan integer yang sudah divalidasi
+            capacity = capacityStr.toIntOrNull(),
             description = description.ifEmpty { null },
             status = status
         )
