@@ -164,7 +164,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:hint="Kapasitas (Opsional)"
+                        android:hint="Kapasitas"
                         app:boxStrokeColor="#116A6F"
                         app:hintTextColor="#116A6F"
                         app:boxCornerRadiusTopStart="12dp"

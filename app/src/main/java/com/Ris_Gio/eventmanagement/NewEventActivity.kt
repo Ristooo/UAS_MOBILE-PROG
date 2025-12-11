@@ -14,7 +14,7 @@ import com.Ris_Gio.eventmanagement.networks.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.Ris_Gio.eventmanagement.R
+import java.util.Calendar // Import yang diperlukan
 
 class NewEventActivity : AppCompatActivity() {
     private lateinit var etTitle: EditText
@@ -55,18 +55,89 @@ class NewEventActivity : AppCompatActivity() {
             spinnerStatus.adapter = adapter
         }
 
+        // Panggil fungsi setup picker baru
+        setupDateTimePickers()
+
         btnCreateEvent.setOnClickListener {
             createNewEvent()
         }
     }
 
-    // Fungsi validasi format Tanggal (YYYY-MM-DD)
+    private fun setupDateTimePickers() {
+        // 1. Setup Date Picker
+        etDate.apply {
+            isFocusable = false // Mencegah keyboard muncul
+            isClickable = true
+            setOnClickListener {
+                showDatePickerDialog()
+            }
+        }
+
+        // 2. Setup Time Picker
+        etTime.apply {
+            isFocusable = false // Mencegah keyboard muncul
+            isClickable = true
+            setOnClickListener {
+                showTimePickerDialog()
+            }
+        }
+    }
+
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        android.app.DatePickerDialog(
+            this,
+            { _, selectedYear, selectedMonth, selectedDay ->
+                // Format tanggal menjadi YYYY-MM-DD
+                val formattedDate = String.format(
+                    "%d-%02d-%02d",
+                    selectedYear,
+                    selectedMonth + 1, // Bulan dimulai dari 0
+                    selectedDay
+                )
+                etDate.setText(formattedDate)
+            },
+            year,
+            month,
+            day
+        ).show()
+    }
+
+    private fun showTimePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+
+        android.app.TimePickerDialog(
+            this,
+            { _, selectedHour, selectedMinute ->
+                // Format waktu menjadi HH:MM:00
+                val formattedTime = String.format(
+                    "%02d:%02d:00",
+                    selectedHour,
+                    selectedMinute
+                )
+                etTime.setText(formattedTime)
+            },
+            hour,
+            minute,
+            true // true untuk format 24 jam
+        ).show()
+    }
+
+
+    // Fungsi validasi format Tanggal (sudah tidak terlalu penting karena dipilih, tapi dipertahankan untuk keamanan)
     private fun isValidDateFormat(date: String): Boolean {
         return date.matches(Regex("^\\d{4}-\\d{2}-\\d{2}$"))
     }
 
-    // Fungsi validasi format Waktu (HH:MM:SS atau HH:MM)
+    // Fungsi validasi format Waktu (sudah tidak terlalu penting karena dipilih, tapi dipertahankan untuk keamanan)
     private fun isValidTimeFormat(time: String): Boolean {
+        // Menerima HH:MM:SS atau HH:MM
         return time.matches(Regex("^\\d{2}:\\d{2}:\\d{2}$")) || time.matches(Regex("^\\d{2}:\\d{2}$"))
     }
 
@@ -85,14 +156,14 @@ class NewEventActivity : AppCompatActivity() {
             return
         }
 
-        // 2. Validasi Format API
+        // 2. Validasi Format API (Dipertahankan sebagai safety net)
         if (!isValidDateFormat(date)) {
-            Toast.makeText(this, "Gagal: Format Tanggal harus YYYY-MM-DD (Contoh: 2025-12-23).", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Gagal: Format Tanggal harus YYYY-MM-DD.", Toast.LENGTH_LONG).show()
             return
         }
 
         if (!isValidTimeFormat(time)) {
-            Toast.makeText(this, "Gagal: Format Waktu harus HH:MM:SS atau HH:MM (Contoh: 19:03:02).", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Gagal: Format Waktu harus HH:MM:SS atau HH:MM.", Toast.LENGTH_LONG).show()
             return
         }
 
