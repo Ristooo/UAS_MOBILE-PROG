@@ -1,86 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
-
-    <LinearLayout
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <!-- Title dan ID -->
             <TextView
-                android:id="@+id/tv_event_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                tools:text="Workshop Laravel Lanjutan" />
+                    android:id="@+id/tv_event_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#1F2937" tools:text="Workshop Laravel Lanjutan"/>
 
-            <!-- ID Event (BARU) -->
             <TextView
-                android:id="@+id/tv_event_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_event_title"
-                android:layout_marginTop="4dp"
-                android:textSize="10sp"
-                android:textColor="#888888"
-                tools:text="ID: 12345" />
-
+                    android:id="@+id/tv_event_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_event_title"
+                    android:layout_marginTop="4dp"
+                    android:textSize="12sp"
+                    android:textColor="#116A6F" android:alpha="0.8"
+                    tools:text="ID: 12345"/>
 
         </RelativeLayout>
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="#DDDDDD" />
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:background="#E5E7EB"/>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="6dp">
 
-        <!-- Detail Event -->
-        <TextView
-            android:id="@+id/tv_event_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            tools:text="Lokasi: Jakarta Convention Center" />
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📍"
+                    android:textSize="18sp"
+                    android:layout_marginEnd="8dp"/>
+
+            <TextView
+                    android:id="@+id/tv_event_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="#4B5563"
+                    tools:text="Jakarta Convention Center"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🕒"
+                    android:textSize="18sp"
+                    android:layout_marginEnd="8dp"/>
+
+            <TextView
+                    android:id="@+id/tv_event_date_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="#4B5563"
+                    tools:text="2025-11-15 | 09:00:00"/>
+        </LinearLayout>
+
 
         <TextView
-            android:id="@+id/tv_event_date_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp"
-            tools:text="Tanggal: 2025-11-15 | 09:00:00" />
-
-        <!-- Status Event -->
-        <TextView
-            android:id="@+id/tv_event_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="#ADD8E6"
-            android:paddingStart="8dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="4dp"
-            android:textColor="#000080"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            tools:text="ONGOING" />
+                android:id="@+id/tv_event_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingStart="12dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
+                android:textColor="#116A6F" android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="ONGOING"/>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
